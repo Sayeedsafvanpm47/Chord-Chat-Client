@@ -100,7 +100,8 @@ Grow with chord chat..
 </p>
 <div style={{display:'flex', alignContent:'center',justifyContent:'center', width:'100%', margin:'5% 0% 0% 0%', height:'10rem'}}>
    
-          <Button loadingText={'Loggin In..'} onClickHandler={onClickHandler} state={state} text={'Log in'} key={'Login btn'} color={'red'}/>
+          <Button mode={'rounded'} loadingText={'Loggin In..'} onClickHandler={onClickHandler} state={state} text={'Log in'} key={'Login btn'} color={'violet'}/>
+          <span style={{width:'2%'}}> </span>
 <Button loadingText={'Lets Sign Up..'} onClickHandler={onClickHandler} state={state} text={'Sign up'} key={'Sign up'} color={'light'}/>
 
       

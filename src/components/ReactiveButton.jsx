@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
 import ReactiveButton from 'reactive-button';
-function Button({text,loadingText,onClickHandler,state,color})
+function Button({text,loadingText,onClickHandler,state,color,mode})
 {
           const theme = useTheme()
           return (
@@ -11,8 +11,9 @@ function Button({text,loadingText,onClickHandler,state,color})
                       successText="Done"
                       onClick={onClickHandler?onClickHandler:''}
                       color = {color}
+                      rounded
                     />
                   );
 }
 
-export default Button 
+export default Button
