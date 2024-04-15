@@ -76,7 +76,7 @@ const AppBar = styled(MuiAppBar, {
     }),
   }),
  
-  boxShadow: 'none',
+
   
 }));
 
@@ -112,7 +112,8 @@ export default function BasicLayout() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  let width = open ? '85vw' : '95vw'
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -208,9 +209,19 @@ export default function BasicLayout() {
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+   
+      <Box component="main" sx={{ flexGrow: 1, p: 3, width:width}}>
         <DrawerHeader />
-        <Outlet/>
+       
+
+
+
+  <Outlet/> 
+ 
+  
+    
+        
+     
          
       </Box>
     

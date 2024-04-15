@@ -10,7 +10,7 @@ function TextAnimate({ textProp }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
-            duration: 6,
+            duration: 3,
             delay: i / 20,
             repeat: Infinity
           }}

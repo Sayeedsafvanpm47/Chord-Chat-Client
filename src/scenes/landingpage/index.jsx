@@ -1,10 +1,5 @@
-import { Container, Grid,Box, Icon, useMediaQuery } from "@mui/material";
+import {Box, useMediaQuery } from "@mui/material";
 import React,{useState} from "react";
-import FlexBetween from "../../components/FlexBetween";
-import Logo from "../../components/Logo";
-import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
-import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
-import { IconButton } from "@mui/material";
 import TextAnimate from "../../components/TextAnimate";
 import { useTheme } from "@mui/material";
 import SlowMotionVideoOutlinedIcon from '@mui/icons-material/SlowMotionVideoOutlined';
@@ -12,43 +7,24 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Button from "../../components/ReactiveButton";
+import { useNavigate } from "react-router-dom";
 
 
 const LandingPage = () => {
-  const theme = useTheme()
-  const isLargeScreen = useMediaQuery('(min-width: 600px)');
-  const [state, setState] = useState('idle');
-
-  const onClickHandler = () => {
-    setState('loading');
-
-    // send an HTTP request
-    setTimeout(() => {
-      setState('success');
-    }, 2000);
-  };
-  const fontSize = isLargeScreen ? '1.25rem' : '0.80rem';
+          const theme = useTheme()
+          const isLargeScreen = useMediaQuery('(min-width: 600px)');
+          const [state, setState] = useState('idle');
+          const navigate = useNavigate()
+        
+          const onClickHandler = () => {
+            setState('loading');
+              navigate('/signin')
+           
+          };
+          const fontSize = isLargeScreen ? '1.25rem' : '0.80rem';
   return (
-        <>
-    <Container fixed>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <FlexBetween>
-          <Logo height={'120px'} width={'200px'}/>
-            <div>
-              <IconButton>
-                <LoginOutlinedIcon />
-              </IconButton>
-              <IconButton>
-                <AppRegistrationOutlinedIcon />
-              </IconButton>
-            </div>
-            
-          </FlexBetween>
-        </Grid>
-      </Grid>  
-    
- <div
+    <div>
+           <div
       style={{
         backgroundImage: `url("https://res.cloudinary.com/dkxyzzuss/image/upload/v1713072608/chord-chat/jm8hk4ak7scepec0gdjd.jpg")`,
         backgroundSize: 'cover',
@@ -107,16 +83,8 @@ Grow with chord chat..
       
 
 </div>
-<FlexBetween>
-          <p style={{fontFamily:theme.typography.fontFamily}}>Built by @Sayeedsafvanpm47/github </p>
-          <p style={{fontFamily:theme.typography.fontFamily}}>Contact: +91 7025053170, sayeedsafvan123@gmail.com</p>
-</FlexBetween>
+    </div>
+  )
+}
 
-    </Container>
-  
-    </>
-
-  );
-};
-
-export default LandingPage;
+export default LandingPage
