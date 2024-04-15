@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Container, Grid,Avatar,Box, Divider, Typography, useMediaQuery } from "@mui/material";
 import {LogoutOutlined} from "@mui/icons-material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -8,9 +8,35 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGuitar} from '@fortawesome/free-solid-svg-icons'
 
 
+import axios from 'axios';
+import { logout } from '../../app/slices/authSlice';
+import { showToastSuccess } from '../../services/toastServices';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+
 const Profile = () => {
 
+ 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
+  const handleLogout = async ()=>{
+    try {
+     const response =  await axios.post('http://localhost:3001/api/users/signout')
+     showToastSuccess(response.data?.message)
+     console.log(response)
+     if(response)
+     {
+      dispatch(logout())
+      navigate('/',{replace:true})
+     }
+
+    } catch (error) {
+      
+    }
+  }
+ 
   return (
     
     
@@ -24,7 +50,7 @@ const Profile = () => {
       <IconButton>
         <EditOutlinedIcon />
       </IconButton>
-      <IconButton>
+      <IconButton onClick={handleLogout}>
         <LogoutOutlined />
       </IconButton>
     </div>

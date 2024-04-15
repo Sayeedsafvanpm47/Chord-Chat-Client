@@ -20,11 +20,12 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { DarkModeOutlined,LightModeOutlined, NoEncryption } from '@mui/icons-material';
 import { useDispatch } from "react-redux";
-import { setMode } from "../../states";
+import { setMode } from "../../app/slices/globalSlice";
 import Logo from '../../components/Logo'
 import FlexBetween from '../../components/FlexBetween';
-import { Outlet } from 'react-router-dom';
-
+import { Outlet, useNavigate } from 'react-router-dom';
+import useAuth from '../../app/hooks/userAuthRedirectionHook';
+import {Navigate} from 'react-router-dom'
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -101,6 +102,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function BasicLayout() {
+const navigate = useNavigate()
+const userAuth = useAuth()
+if(!userAuth) return <Navigate to="/" replace />;
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);

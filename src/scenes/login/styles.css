@@ -14,3 +14,6 @@ body {
   height: 200vh;
   margin: -20px 0 50px;
 }
+.error-placeholder::placeholder {
+  color: red;
+}

@@ -6,12 +6,18 @@ import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import { IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import useAuth from "../../app/hooks/userAuthRedirectionHook";
 
 
 const LandingLayout = () => {
   const theme = useTheme()
   const navigate = useNavigate()
+  const userAuth = useAuth()
+  if(userAuth)
+  {
+    return <Navigate to='/home' replace/>
+  }
 
   return (
         <>

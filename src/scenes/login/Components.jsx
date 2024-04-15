@@ -31,7 +31,7 @@ export const Container = styled.div`
   overflow: hidden;
   width: 900px;
   max-width: 100%;
-  min-height: 500px;
+  min-height: 550px;
 `;
 
 export const SignUpContainer = styled.div`
@@ -74,6 +74,8 @@ export const Form = styled.form`
   height: 100%;
   text-align: center;
 `;
+
+
 
 export const Title = styled.h1`
   font-weight: bold;
@@ -118,6 +120,28 @@ export const Button = styled.button`
     outline: none;
   }
 `;
+
+
+
+export const OtpButton = styled.button`
+border-radius: 20px;
+  border: 1px solid white;
+  background-color: black;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+  margin-bottom:10px;
+  &:active {
+    transform: scale(0.95);
+  }
+  &:focus {
+    outline: none;
+  }
+`
 
 export const GhostButton = styled(Button)`
   background-color: transparent;
@@ -193,3 +217,12 @@ export const Paragraph = styled.p`
   letter-spacing: 0.5px;
   margin: 20px 0 30px;
 `;
+export const ParagraphModal = styled.p`
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+  color : 'black;
+  
+  `;

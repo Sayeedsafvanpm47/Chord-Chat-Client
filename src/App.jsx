@@ -3,7 +3,7 @@ import {CssBaseline,ThemeProvider} from '@mui/material'
 import {createTheme} from '@mui/material'
 import { themeSettings } from './theme'
 import {useSelector,useDispatch} from 'react-redux'
-import { setMode } from './states'
+import { setMode } from './app/slices/globalSlice'
 import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
 import Dashboard from './scenes/dashboard/index'
 import Home from './scenes/home'
@@ -12,6 +12,8 @@ import BasicLayout from './scenes/global/BasicLayout'
 import LandingLayout from './scenes/global/LandingLayout'
 import LoginForm from './scenes/login'
 import Profile from './scenes/profile'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const dispatch = useDispatch(); 
@@ -26,7 +28,7 @@ const App = () => {
     <div className='app'>
       <BrowserRouter>
       <ThemeProvider theme={theme}>
-        
+        <ToastContainer></ToastContainer>
         <CssBaseline />
         <Routes>
         {/* <Route path='/' element={<LandingPage/>}/> */}
