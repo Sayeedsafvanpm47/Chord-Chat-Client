@@ -4,6 +4,7 @@ import FlexBetween from "../../components/FlexBetween";
 import Logo from "../../components/Logo";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import {HomeOutlined} from '@mui/icons-material'
 import { IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
@@ -32,6 +33,9 @@ const LandingLayout = () => {
               </IconButton>
               <IconButton onClick={()=>navigate('/signin')}> 
                 <AppRegistrationOutlinedIcon />
+              </IconButton>
+              <IconButton onClick={()=>navigate('/')}> 
+                <HomeOutlined />
               </IconButton>
             </div>
             

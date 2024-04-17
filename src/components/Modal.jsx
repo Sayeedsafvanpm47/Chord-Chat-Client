@@ -45,7 +45,7 @@ const containerVariant = {
           exit: { top: "-50%", transition: { type: "spring", duration: 0.5 } }
         };
         
-const OtpModal = ({ handleClose, children, isOpen }) => {
+const Modal = ({ handleClose, children, isOpen }) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -93,4 +93,4 @@ const OtpModal = ({ handleClose, children, isOpen }) => {
   );
 };
 
-export default OtpModal;
+export default Modal;

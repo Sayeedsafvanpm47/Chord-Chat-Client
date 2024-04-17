@@ -12,7 +12,7 @@ import axios from 'axios';
 import { logout } from '../../app/slices/authSlice';
 import { showToastSuccess } from '../../services/toastServices';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const Profile = () => {
@@ -20,10 +20,11 @@ const Profile = () => {
  
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
+  const {userInfo} = useSelector((state)=>state.auth)
+  
   const handleLogout = async ()=>{
     try {
-     const response =  await axios.post('http://localhost:3001/api/users/signout')
+     const response =  await axios.post('https://chordchat.dev/api/users/signout')
      showToastSuccess(response.data?.message)
      console.log(response)
      if(response)
@@ -43,7 +44,7 @@ const Profile = () => {
      <>
     <Grid container spacing={2}>
   <Grid item xs={8}>
-    sydonguitars
+    {userInfo.data.username ? userInfo.data.username : 'user'} 
   </Grid>
   <Grid item xs={4} display="flex" justifyContent="flex-end">
     <div>
@@ -61,9 +62,9 @@ const Profile = () => {
 </Box>
 <Box sx={{display:'flex',justifyContent:'center',alignItems:'center', margin:'0 0 5% 0'}}>
 <FlexBetween sx={{width:'40vw'}}>
-  <Typography sx={{fontSize:'20px'}} paragraph>0 Gigs</Typography> 
-  <Typography sx={{fontSize:'20px'}} paragraph>0 Fans</Typography> 
-  <Typography sx={{fontSize:'20px'}} paragraph>0 Idols</Typography> 
+  <Typography sx={{fontSize:'20px'}} paragraph>{userInfo.data.gigs ? userInfo.data.gigs.length : 0 } Gigs</Typography> 
+  <Typography sx={{fontSize:'20px'}} paragraph>{userInfo.data.fans ? userInfo.data.gigs.length : 0 } Fans</Typography> 
+  <Typography sx={{fontSize:'20px'}} paragraph>{userInfo.data.idols ? userInfo.data.gigs.length : 0 } Idols</Typography> 
 
   
   </FlexBetween>
@@ -72,7 +73,7 @@ const Profile = () => {
  
   <Box sx={{display:'flex',fontSize:'60px'}}>
   <FontAwesomeIcon icon={faGuitar}/>
-  <Typography sx={{fontSize:'20px',margin:'2% 0 0 0'}}>Gigs 0 </Typography>
+  <Typography sx={{fontSize:'20px',margin:'2% 0 0 0'}}>Gigs {userInfo.data.gigs ? userInfo.data.gigs.length : 0 } </Typography>
  
 
   </Box>
