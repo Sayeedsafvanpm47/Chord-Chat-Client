@@ -8,6 +8,7 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Button from "../../components/ReactiveButton";
 import { useNavigate } from "react-router-dom";
+import Card from "../../components/Card";
 
 
 const LandingPage = () => {
@@ -40,28 +41,32 @@ const LandingPage = () => {
       <p style={{fontSize:'3rem', textAlign:'center', fontFamily:theme.typography.fontFamily}}><TextAnimate textProp={'Harmonize Locally, Perform Globally With Chord Chat!'}></TextAnimate></p>
       <p style={{fontSize:'1rem', textAlign:'center', fontFamily:theme.typography.fontFamily,textWrap:'wrap', margin:'-2% 20% 0 20%'}}><TextAnimate textProp={'Connect, Collaborate, and Create with Musicians Near You. Unlock Your Musical Potential, Trade Gear, and Score Concert Tickets at Unbeatable Prices. Join the Melodic Movement at Chord Chat Today!'}></TextAnimate></p>
      
-      <div style={{backgroundColor:'white',height:'55%',margin: '2% -16.2% 2% -16%',transform: 'skewY(-4deg)',color:'black'}}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4,4fr)', margin:'2% 0% 0% 15%', transform:'skewY(3deg)', paddingTop:'2rem' }}>
+      <div style={{backgroundColor:'white', height: '30rem',margin: '2% -16.2% 2% -16%',transform: 'skewY(-4deg)',color:'black',overflowX: 'auto'}}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4,4fr)',gridGap: '1rem', margin:'2% 0% 0% 5%', transform:'skewY(3deg)', paddingTop:'2rem' }}>
        {/* icons */}
 
       
-      <SlowMotionVideoOutlinedIcon sx={{fontSize:'3rem',marginTop:'4rem'}}/>
-      <ReceiptIcon  sx={{fontSize:'3rem',marginTop:'4rem'}} />
-      <EmojiPeopleIcon  sx={{fontSize:'3rem',marginTop:'4rem'}} />
-      <AddShoppingCartIcon  sx={{fontSize:'3rem',marginTop:'4rem',}} />
+      <SlowMotionVideoOutlinedIcon sx={{fontSize:'3rem',margin:'1rem 0rem 0rem 8rem'}}/>
+      <ReceiptIcon  sx={{fontSize:'3rem',margin:'1rem 0rem 0rem 8rem'}} />
+      <EmojiPeopleIcon  sx={{fontSize:'3rem',margin:'1rem 0rem 0rem 8rem'}} />
+      <AddShoppingCartIcon  sx={{fontSize:'3rem',margin:'1rem 0rem 0rem 8rem',}} />
 
      <Box sx={{width:'50%', textWrap:'wrap',margin:'5% 0 0 0',fontFamily:theme.typography.fontFamily,fontSize,fontWeight:'bold'}}>
-     Stream unlimited content of musicians with unique talents. Join now and contribute to our community
+     <Card title={'Stream content'} content={' Stream unlimited content of musicians with unique talents. Join now and contribute to our community'}></Card>  
+    
      </Box>
-     <Box  sx={{width:'50%', textWrap:'wrap',margin:'5% 0 0 0', fontFamily:theme.typography.fontFamily,fontSize,fontWeight:'bold'}}>
-     Buy hot concert tickets at best deals. Get your favourite tickets now!
+     
+     <Box  sx={{width:'50%', textWrap:'wrap',margin:'5% 0% 0% 0%', fontFamily:theme.typography.fontFamily,fontSize,fontWeight:'bold'}}>
+     <Card title={'Buy Tickets'} content={'Buy hot concert tickets at best deals. Get your favourite tickets now!'}></Card>  
+
           </Box>
           <Box  sx={{width:'50%', textWrap:'wrap',margin:'5% 0 0 0',fontFamily:theme.typography.fontFamily,fontSize,fontWeight:'bold'}}>
-          Connect with other musicians, make your network your net worth!
-Grow with chord chat..
+          <Card title={'Buy Tickets'} content={'Connect with other musicians, make your network your net worth!Grow with chord chat..'}></Card>  
+          
           </Box>
           <Box  sx={{width:'50%', textWrap:'wrap',margin:'5% 0 0 0',fontFamily:theme.typography.fontFamily,fontSize,fontWeight:'bold'}}>
-          Buy hot concert tickets at best deals. Get your favourite tickets now!
+          <Card title={'Buy Gear'} content={'Buy the super cool instruments used by other prodigies and start making music at reasonable prices!'}></Card>  
+
           </Box>  
  
        

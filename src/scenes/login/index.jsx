@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCredentials } from "../../app/slices/authSlice";
 import Modal from "../../components/Modal";
 import { showToastError, showToastSuccess } from "../../services/toastServices";
+import axiosProtect from "../../app/axios/axiosAuth";
 
 function LoginForm() {
   const [signIn, toggle] = React.useState(true);
@@ -60,13 +61,14 @@ function LoginForm() {
     try {
       setLoading(true);
 
-      console.log("Prevented");
+      console.log("clicked login");
 
       // Make POST request to sign in endpoint
       const response = await axios.post(
         "https://chordchat.dev/api/users/signin",
-        data
+        data, { withCredentials: true } 
       );
+     
 
       console.log(response.data, "response"); 
       dispatch(setCredentials({ ...response.data }));
@@ -75,11 +77,15 @@ function LoginForm() {
     } catch (error) {
       setLoading(false);
 
-      error.response.data.errors &&
-        error.response.data.errors.forEach((errorMessage) => {
-          showToastError(errorMessage.errors);
-        });
-      console.error("Sign-in failed:", error.response.data.errors);
+     
+  if (error.response && error.response.data.errors) {
+    error.response.data.errors.forEach((errorMessage) => {
+      showToastError(errorMessage.errors);
+    });
+    console.error("Sign-in failed:", error.response.data.errors);
+  } else {
+    console.error("Sign-in failed:", error.message);
+  }
   
     } finally {
       setLoading(false);
@@ -137,10 +143,10 @@ function LoginForm() {
   
 
 data = {...data,enteredOtp}
-      console.log("Prevented");
+      console.log("clicked signup");
       const response = await axios.post(
         "https://chordchat.dev/api/users/signup",
-        data
+        data,{ withCredentials: true } 
       );
 
       console.log(response.data, "response"); 
