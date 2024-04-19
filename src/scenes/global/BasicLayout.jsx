@@ -26,6 +26,10 @@ import FlexBetween from '../../components/FlexBetween';
 import { Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../app/hooks/userAuthRedirectionHook';
 import {Navigate} from 'react-router-dom'
+import {faGuitar,faMessage,faBell,faSearch,faTicket,faShop,faUser,faMusic} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { viewProfile } from '../../services/sidebarNavigation';
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -163,12 +167,13 @@ if(!userAuth) return <Navigate to="/" replace />;
           </FlexBetween>
         </DrawerHeader>
         <Divider />
+        
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+    
+            <ListItem key={'text'} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
+                  minHeight: 70,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
@@ -180,20 +185,13 @@ if(!userAuth) return <Navigate to="/" replace />;
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faGuitar}/>} 
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={'Gigs'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
+                  minHeight: 70,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
@@ -205,13 +203,108 @@ if(!userAuth) return <Navigate to="/" replace />;
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faMessage}/>} 
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={'Chats'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
+              <ListItemButton
+                sx={{
+                  minHeight: 70,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faBell}/>} 
+                </ListItemIcon>
+                <ListItemText primary={'Notifications'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  minHeight: 70,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+                onClick={()=>navigate('/search')}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faSearch}/>} 
+                </ListItemIcon>
+                <ListItemText primary={'Find Musicians'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  minHeight: 70,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faTicket}/>} 
+                </ListItemIcon>
+                <ListItemText primary={'Ticket Zone'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  minHeight: 70,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faShop}/>} 
+                </ListItemIcon>
+                <ListItemText primary={'Melody trade'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+              </ListItemButton>
+
+              <ListItemButton
+                sx={{
+                  minHeight: 70,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+                onClick={()=>navigate('/profile')}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faUser}/>} 
+                </ListItemIcon>
+                <ListItemText primary={'Your Profile'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+              </ListItemButton>
+
             </ListItem>
-          ))}
+          
         </List>
+      
       </Drawer>
    
       <Box component="main" sx={{ flexGrow: 1, p: 3, width:width}}>

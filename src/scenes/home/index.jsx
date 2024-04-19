@@ -13,7 +13,7 @@ const Home = () => {
     console.log(document.cookie,'doc cookie')
     try {
       const searchTerm = 'say';
-      const response = await axiosProtect.post('/user-service/find-users', { searchTerm },{withCredentials:true});
+      const response = await axios.post('http://localhost:3002/api/user-service/find-users', { searchTerm },{withCredentials:true});
   
       if (response.status === 200) {
         console.log(response.data);

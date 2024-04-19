@@ -14,6 +14,8 @@ import LoginForm from './scenes/login'
 import Profile from './scenes/profile'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import SearchUsers from './scenes/search'
+import UserProfile from './scenes/user-profile'
 
 const App = () => {
   const dispatch = useDispatch(); 
@@ -43,6 +45,9 @@ const App = () => {
             <Route path='/home' element={<Home/>}/>
             <Route path='/dashboard' element={<Dashboard/>}/>
             <Route path='/profile' element={<Profile/>}/>
+            <Route path='/search' element={<SearchUsers/>}/>
+            <Route path='/userprofile' element={<UserProfile/>}/>
+
             
           </Route>
         </Routes>

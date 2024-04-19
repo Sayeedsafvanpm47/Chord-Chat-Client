@@ -17,7 +17,7 @@ axiosProtect.interceptors.request.use(config => {
   });
   console.log(cookies,'cookies')
   
-  const authCookie = cookies.find(cookie => cookie.key === 'jwt');
+  const authCookie = cookies.find(cookie => cookie.key == 'jwt');
   console.log(authCookie,'authcookie')
   if (authCookie) {
     config.headers['X-Access-Token'] = authCookie.value;
