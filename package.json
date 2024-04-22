@@ -26,10 +26,12 @@
     "@nivo/geo": "^0.85.1",
     "@nivo/line": "^0.85.1",
     "@reduxjs/toolkit": "^2.2.3",
+    "autoprefixer": "^10.4.19",
     "axios": "^1.6.8",
     "clsx": "^2.1.0",
     "formik": "^2.4.5",
     "framer-motion": "^11.0.28",
+    "postcss": "^8.4.38",
     "react": "^18.2.0",
     "react-awesome-button": "^4.2.5",
     "react-dom": "^18.2.0",
@@ -44,6 +46,7 @@
     "styled-components": "^6.1.8",
     "superagent": "^8.1.2",
     "tailwind-merge": "^2.2.2",
+    "tailwindcss": "^3.4.3",
     "yup": "^1.4.0"
   },
   "devDependencies": {

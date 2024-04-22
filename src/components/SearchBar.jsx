@@ -19,7 +19,7 @@ const SearchBar = ({width,text,onSearch,id}) => {
                 
   return (
           <div className="form-control" style={styles.container}>
-          <input style={{ width: '100%' }} onChange={handleChange} className="input input-alt" placeholder={text} required="" type="text"/>
+          <input style={{ width: '100%',color:theme.palette.mode == 'dark' ? 'white':'black',backgroundColor:theme.palette.mode == 'dark' ? '#222222' : 'white'}} onChange={handleChange} className="input input-alt" placeholder={text} required="" type="text"/>
           <span className="input-border input-border-alt"></span>
         </div>
         

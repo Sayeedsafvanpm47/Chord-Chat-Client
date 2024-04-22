@@ -14,8 +14,7 @@ const Overlay = styled(motion.div)`
 `;
 
 const ModalContainer = styled(motion.div)`
-  width: 40%;
-  height: 60%;
+
   background-color: ${({ theme }) => theme.palette.mode === "dark" ? "#333" : "#fff"}; 
   position: absolute;
   top: 50%;
@@ -54,7 +53,7 @@ const containerVariant = {
         
 // Rest of the component remains the same
 
-const ModalThemed = ({ handleClose, children, isOpen }) => {
+const ModalThemed = ({ handleClose, children, isOpen,height,width }) => {
   const theme = useTheme(); // Access the theme
   
   return (
@@ -65,10 +64,10 @@ const ModalThemed = ({ handleClose, children, isOpen }) => {
           animate={"isOpen"}
           exit={"exit"}
           variants={modalVariant}
-          onClick={handleClose}
+       
           theme={theme} // Pass the theme to the styled component
         >
-          <ModalContainer variants={containerVariant} theme={theme}>
+          <ModalContainer style={{height:height?height:'60%',width:width?width:'40%'}} variants={containerVariant} theme={theme}>
        
           <CloseButton
               onClick={handleClose}

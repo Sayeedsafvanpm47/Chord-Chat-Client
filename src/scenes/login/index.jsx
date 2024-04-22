@@ -145,7 +145,7 @@ function LoginForm() {
 data = {...data,enteredOtp}
       console.log("clicked signup");
       const response = await axios.post(
-        "https://chordchat.dev/api/users/signup",
+        "http://localhost:3001/api/users/signup",
         data,{ withCredentials: true } 
       );
 
@@ -181,7 +181,7 @@ data = {...data,enteredOtp}
 
     if(email == '') return showToastError('Please enter an email')
     setOtpLoad(true);
-   const res = await axios.post('https://chordchat.dev/api/users/generate-otp',{email})
+   const res = await axios.post('http://localhost:3001/api/users/generate-otp',{email})
     console.log("clicked",res);
     setOtpLoad(false);
     setShowModal(!showModal);

@@ -1,7 +1,7 @@
 .input {
-          color: #fff;
-          font-size: 0.9rem;
-          background-color: transparent;
+         
+          font-size: 0.2rem;
+          
           width: 100%;
           box-sizing: border-box;
           padding-inline: 0.5em;
@@ -9,15 +9,19 @@
           border: none;
           border-bottom: var(--border-height) solid var(--border-before-color);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          height: 2.5rem;
+          border-radius: 0.5rem;
+          
         }
         
         .input-border {
           position: absolute;
           background: var(--border-after-color);
           width: 0%;
-          height: 2px;
+          height: 3px;
           bottom: 0;
           left: 0;
+         
           transition: width 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
         }
         
@@ -45,6 +49,7 @@
           height: 3px;
           background: linear-gradient(90deg, #FF6464 0%, #FFBF59 50%, #47C9FF 100%);
           transition: width 0.4s cubic-bezier(0.42, 0, 0.58, 1.00);
+         
         }
         
         .input-alt:focus + .input-border-alt {

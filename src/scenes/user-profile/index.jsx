@@ -30,12 +30,8 @@ const UserProfile = () => {
   const [following,setFollowing] = useState(true)
   useEffect(() => {
   
-    const isFollowing = userInfo.data.idols.some(user => user == userDetails.userDetails._id);
-    console.log(isFollowing)
-    console.log(userInfo.data.idols)
-    console.log(userDetails.userDetails._id)
-    console.log(typeof userDetails.userDetails._id)
-    console.log(typeof userInfo.data._id) 
+    const isFollowing = userInfo.data.idols.some(user => user == userDetails.userDetails?._id);
+
    if(isFollowing)
    {
     setFollowing(true)
@@ -43,12 +39,12 @@ const UserProfile = () => {
    {
     setFollowing(false);
    }
-  }, [userInfo, userDetails.userDetails._id]);
+  }, [userInfo, userDetails?.userDetails?._id]);
 
   const handleToggleFollow = async () => {
-    console.log(userDetails.userDetails._id)
-    const userId = userDetails.userDetails._id
-    const currentUser =  userInfo.data._id
+ 
+    const userId = userDetails.userDetails?._id
+    const currentUser =  userInfo.data?._id
     const res = await axios.post(`http://localhost:3002/api/user-service/toggle-follow-user/${userId}`,{currentUser},{withCredentials:true})
     console.log(res)
     if(res)

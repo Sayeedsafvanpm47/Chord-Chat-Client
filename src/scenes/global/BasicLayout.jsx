@@ -38,6 +38,7 @@ const openedMixin = (theme) => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
+  backgroundColor:theme.palette.mode == 'dark' ? '#000000' : 'white',
   overflowX: 'hidden',
   borderRight:'0.2px solid light'
 });
@@ -47,6 +48,7 @@ const closedMixin = (theme) => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  backgroundColor:theme.palette.mode == 'dark' ? '#000000' : 'white',
   overflowX: 'hidden',
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
@@ -59,6 +61,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: theme.spacing(0, 1),
+  backgroundColor:theme.palette.mode == 'dark' ? '#000000' : 'white',
+ 
 
   ...theme.mixins.toolbar,
 }));
@@ -72,6 +76,8 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
  
   }),
+  backgroundColor:theme.palette.mode == 'dark' ? '#000000' : '#f7f7f7',
+  boxShadow:'none',
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -96,6 +102,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
       '& .MuiDrawer-paper': openedMixin(theme),
   
     }),
+    backgroundColor:theme.palette.mode == 'dark' ? '#000000' : 'white',
     ...(!open && {
       ...closedMixin(theme),
       '& .MuiDrawer-paper': closedMixin(theme),
@@ -128,6 +135,7 @@ if(!userAuth) return <Navigate to="/" replace />;
       <AppBar position="fixed" open={open} >
        
         <Toolbar>
+          <div>
           <IconButton
            color="inherit"
             aria-label="open drawer"
@@ -150,6 +158,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                 <LightModeOutlined sx={{ fontSize: "25px" }} />
               )}
             </IconButton>
+            </div>
          
         </Toolbar>
       </AppBar>
@@ -268,6 +277,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/melodytrade')}
               >
                 <ListItemIcon
                   sx={{

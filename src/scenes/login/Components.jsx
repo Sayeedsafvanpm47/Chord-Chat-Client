@@ -85,9 +85,11 @@ export const Title = styled.h1`
 export const Input = styled.input`
   background-color: #eee;
   border: none;
+  border-radius:40px;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
+  
 `;
 
 export const Select = styled.select`  background-color: #eee;
