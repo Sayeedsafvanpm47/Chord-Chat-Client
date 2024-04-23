@@ -27,7 +27,7 @@ const SearchUsers = () => {
       console.log(document.cookie,'cookie')
       setSearchResults(response.data.users);
     } catch (error) {
-      console.error(error); // Handle errors appropriately
+      console.error(error);
     }
   };
   

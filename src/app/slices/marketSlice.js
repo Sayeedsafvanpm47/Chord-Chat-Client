@@ -1,10 +1,10 @@
-// userProfileSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { MarketApi } from '../../api';
 
 const initialState = {
-  Market: localStorage.getItem('marketInfo')?JSON.parse(localStorage.getItem('marketInfo')) : {},
+  Market: {},
   loading: false,
+  loadingMore: false,
   error: null,
 };
 
@@ -18,8 +18,8 @@ const userMarketSlice = createSlice({
     },
     setMarketSuccess(state, action) {
       state.Market = action.payload;
-      localStorage.setItem('marketInfo',JSON.stringify(action.payload))
       state.loading = false;
+      state.error = null; // Reset error state upon success
     },
     setMarketFailure(state, action) {
       state.loading = false;
@@ -34,12 +34,12 @@ export const {
   setMarketFailure,
 } = userMarketSlice.actions;
 
-export const fetchMarket = (userId) => async (dispatch) => {
+export const fetchMarket = (page) => async (dispatch) => {
   dispatch(setMarketStart());
   try {
-    const response = await axios.get(`http://localhost:3003/api/market/get-all-ads`);
+    const response = await MarketApi.get(`/get-all-ads/${page}`);
+    console.log(response, 'response', page);
     dispatch(setMarketSuccess(response.data));
-    
   } catch (error) {
     dispatch(setMarketFailure(error.message));
   }

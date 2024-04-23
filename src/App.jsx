@@ -17,12 +17,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import SearchUsers from './scenes/search'
 import UserProfile from './scenes/user-profile'
 import MarketPlace from './scenes/marketplace'
+import AdminLayout from './scenes/global/AdminLayout'
+import AdminMarket from './scenes/admin-marketplace'
+import adminAuth from './app/hooks/adminAuthRedirectionHook'
+import useAuth from './app/hooks/userAuthRedirectionHook'
+import TestMarket from './scenes/marketplace-2'
 
 
 const App = () => {
   const dispatch = useDispatch(); 
   const mode = useSelector((state)=>state.global.mode)
   const theme = useMemo(()=>createTheme(themeSettings(mode)),[mode])
+  const {userInfo} = useSelector(state => state.auth)
+
   const handleModeToggle = () => {
     // Dispatch setMode action to toggle mode
     dispatch(setMode());
@@ -36,12 +43,18 @@ const App = () => {
         <CssBaseline />
         <Routes>
         {/* <Route path='/' element={<LandingPage/>}/> */}
-        <Route element={<LandingLayout/>}>
+       {userInfo == null && <Route element={<LandingLayout/>}>
           <Route path='/' element={<LandingPage/>}/>
+          
           <Route path='/signin' element={<LoginForm/>}/>
-        </Route>
-
-          <Route element={<BasicLayout/>}>
+        </Route>}
+        {userInfo?.data.isAdmin && <Route element={<AdminLayout/>}>
+            <Route path='/' element={<Navigate to='/admin-market' replace/>}/>
+            <Route path='/profile' element={<Profile/>}/>
+            <Route path='/admin-market' element={<AdminMarket/>}/>
+            <Route path='/test' element={<TestMarket/>}/>
+          </Route>}
+        {!userInfo?.data?.isAdmin && <Route element={<BasicLayout/>}>
             {/* <Route path='/' element={<Navigate to="/home" replace/> }/> */}
            
             <Route path='/home' element={<Home/>}/>
@@ -50,9 +63,12 @@ const App = () => {
             <Route path='/search' element={<SearchUsers/>}/>
             <Route path='/userprofile' element={<UserProfile/>}/>
             <Route path='/melodytrade' element={<MarketPlace/>}/>
+            <Route path='/test' element={<TestMarket/>}/>
 
             
-          </Route>
+          </Route>}
+
+          
         </Routes>
    
       </ThemeProvider>

@@ -9,14 +9,20 @@ import { IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import useAuth from "../../app/hooks/userAuthRedirectionHook";
+import adminAuth from "../../app/hooks/adminAuthRedirectionHook";
 
 
 const LandingLayout = () => {
   const theme = useTheme()
   const navigate = useNavigate()
   const userAuth = useAuth()
+  const isAdmin = adminAuth()
   if(userAuth)
   {
+    if(isAdmin)
+    {
+      return <Navigate to='/admin-market' replace/>
+    }
     return <Navigate to='/home' replace/>
   }
 

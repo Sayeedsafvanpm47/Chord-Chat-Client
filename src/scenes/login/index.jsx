@@ -20,6 +20,7 @@ import axiosProtect from "../../app/axios/axiosAuth";
 
 function LoginForm() {
   const [signIn, toggle] = React.useState(true);
+  
   const schema = signIn
     ? Yup.object().shape({
         email: Yup.string()
@@ -73,7 +74,9 @@ function LoginForm() {
       console.log(response.data, "response"); 
       dispatch(setCredentials({ ...response.data }));
       setLoading(false);
-      navigate("/home"); 
+   
+      navigate('/profile')
+     
     } catch (error) {
       setLoading(false);
 

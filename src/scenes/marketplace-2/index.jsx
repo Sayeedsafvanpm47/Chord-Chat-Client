@@ -25,13 +25,9 @@
   import InfiniteScroll from 'react-infinite-scroll-component'
 import { MarketApi } from '../../api';
 
-  const MarketPlace = () => {
+  const TestMarket = () => {
     const {Market,loading} = useSelector((state)=>state.market)
-    const [isIntersecting, setIsIntersecting] = useState(false);
-    const [hasMore,setHasMore] = useState(false)
     const [page, setPage] = useState(1);
-    const navigate = useNavigate()
-    const [searchTerm, setSearchTerm] = useState('');
     const [ads,setAds] = useState([])
     const dispatch = useDispatch()
     const [searchResults, setSearchResults] = useState([]);
@@ -39,24 +35,19 @@ import { MarketApi } from '../../api';
     const {userInfo} = useSelector(state => state.auth)
     const [showModal,setShowModal] = useState(false)
 
-   
-    useEffect(()=>{
-      dispatch(fetchMarket(page))
-    
-    },[dispatch])
+   const fetchMarket = async (page)=>{
+    try {
+      const response = await MarketApi.get(`get-all-ads/${page}`,{withCredentials:true})
+      console.log(response.data)
+      setAds(response.data.data)
 
-    useEffect(()=>{
-      dispatch(fetchMarket(page))
-    },[page])
-
-    useEffect(() => {
-      if (Market) {
-        setHasMore(Market?.data.length > 0);
-      }
-    }, [Market]);
-    let onPage = async ()=>{
-      setPage(prevPage => prevPage+1)
+    } catch (error) {
+      console.log(error)
     }
+   }
+     useEffect(()=>{
+       fetchMarket(page)
+     },[dispatch])
      const handleSearch = async (value) => {
       try {
             if (value.trim() === '') {
@@ -202,7 +193,7 @@ import { MarketApi } from '../../api';
 
       
     
-        {searchResults.length == 0 && (Market?.data.length > 0   ? (  <div>   <List>{Market?.data.map((item,index) => { return (<ListItem  key={item._id} alignItems='flex-start' sx={{ backgroundColor:theme.palette.mode == 'dark' ? '#111111' : '#f5f5f5', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', borderRadius: '10px', marginBottom: '20px', transition: 'transform 0.2s ease',
+        {searchResults.length == 0 && (ads?.length > 0   ? (  <div>   <List>{ads.map((item,index) => { return (<ListItem  key={item._id} alignItems='flex-start' sx={{ backgroundColor:theme.palette.mode == 'dark' ? '#111111' : '#f5f5f5', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', borderRadius: '10px', marginBottom: '20px', transition: 'transform 0.2s ease',
                 '&:hover': {
                   transform: 'translateY(-10px) scale(0.9)',
                   backgroundColor:'#3a3b3c'
@@ -234,7 +225,7 @@ import { MarketApi } from '../../api';
      
         
         )}</List></div> ) : 'no ads posted') }  
-        <button onClick={onPage}>Click to view more</button>
+        <button>Click to view more</button>
         <button onClick={goToFirst}>Go to first</button>
         {searchResults?.length > 0 && (
             <>
@@ -276,4 +267,4 @@ import { MarketApi } from '../../api';
     );
   };
 
-  export default MarketPlace;
+  export default TestMarket;
