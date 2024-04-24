@@ -89,6 +89,7 @@ export const Input = styled.input`
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
+  color:black;
   
 `;
 
@@ -96,13 +97,19 @@ export const Select = styled.select`  background-color: #eee;
 border: none;
 padding: 12px 15px;
 margin: 8px 0;
-width: 100%;`;
+width: 100%;
+color:black;
+border-radius:20px;
+`;
+
 
 export const Option = styled.option`  background-color: #eee;
 
 padding: 12px 15px;
 margin: 8px 0;
-width: 100%;`
+width: 100%;
+color:black;
+border-radius:20px;`
 
 export const Button = styled.button`
   border-radius: 20px;
