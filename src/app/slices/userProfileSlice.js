@@ -37,7 +37,7 @@ export const {
 export const fetchUserDetails = (userId) => async (dispatch) => {
   dispatch(setUserDetailsStart());
   try {
-    const response = await axios.get(`http://localhost:3002/api/user-service/view-user-profile/${userId}`);
+    const response = await axios.get(`http://localhost:3002/api/user-service/view-user-profile/${userId}`,{withCredentials:true});
     dispatch(setUserDetailsSuccess(response.data));
     
   } catch (error) {

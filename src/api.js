@@ -24,3 +24,12 @@ MarketApi.interceptors.request.use((config) => {
   // Handle request errors
   return Promise.reject(error);
 });
+
+UserApi.interceptors.request.use((config) => {
+
+  config.withCredentials = true;
+  return config;
+}, (error) => {
+  // Handle request errors
+  return Promise.reject(error);
+});

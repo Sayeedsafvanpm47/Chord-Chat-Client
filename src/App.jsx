@@ -21,7 +21,8 @@ import AdminLayout from './scenes/global/AdminLayout'
 import AdminMarket from './scenes/admin-marketplace'
 import adminAuth from './app/hooks/adminAuthRedirectionHook'
 import useAuth from './app/hooks/userAuthRedirectionHook'
-import TestMarket from './scenes/marketplace-2'
+import UsersInfo from './scenes/admin-cutomers'
+
 
 
 const App = () => {
@@ -52,7 +53,8 @@ const App = () => {
             <Route path='/' element={<Navigate to='/admin-market' replace/>}/>
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/admin-market' element={<AdminMarket/>}/>
-            <Route path='/test' element={<TestMarket/>}/>
+            <Route path='/admin-users' element={<UsersInfo/>}/>
+           
           </Route>}
         {!userInfo?.data?.isAdmin && <Route element={<BasicLayout/>}>
             {/* <Route path='/' element={<Navigate to="/home" replace/> }/> */}
@@ -63,7 +65,7 @@ const App = () => {
             <Route path='/search' element={<SearchUsers/>}/>
             <Route path='/userprofile' element={<UserProfile/>}/>
             <Route path='/melodytrade' element={<MarketPlace/>}/>
-            <Route path='/test' element={<TestMarket/>}/>
+          
 
             
           </Route>}

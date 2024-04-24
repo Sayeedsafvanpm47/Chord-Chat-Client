@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   useTheme,
+  Tooltip,
 } from "@mui/material";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,8 +22,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGuitar } from "@fortawesome/free-solid-svg-icons";
 
 import axios from "axios";
-import { logout } from "../../app/slices/authSlice";
-import { showToastSuccess } from "../../services/toastServices";
+import { logout, setCredentials } from "../../app/slices/authSlice";
+import { showToastError, showToastSuccess } from "../../services/toastServices";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "../../components/Modal";
@@ -68,7 +69,7 @@ const Profile = () => {
     const userId = userInfo.data._id;
     setEditProfile(false);
     const response = await axios.get(
-      `http://localhost:3002/api/user-service/get-idols/${userId}`
+      `http://localhost:3002/api/user-service/get-idols/${userId}`,{withCredentials:true}
     );
     setIdolsFound(response.data.data);
     setModalTitle("Your Idols");
@@ -84,7 +85,22 @@ const Profile = () => {
     setShowModal(true);
   };
   const editUserProfile = async (data)=>{
-    console.log(data)
+   try {
+    const formData = new FormData()
+    console.log(imageData,'image data')
+   imageData && formData.append('image',imageData)
+    formData.append('firstname',data.firstname)
+    formData.append('lastname',data.lastname)
+    formData.append('username',data.username)
+    console.log(formData,'formdata')
+     const response = await axios.patch('http://localhost:3002/api/user-service/edit-profile',formData,{withCredentials:true})
+     console.log(response,'response')
+     dispatch(setCredentials(response.data))
+     showModal(false)
+     showToastSuccess(response.data.message)
+   } catch (error) {
+    showToastError(error)
+   }
   }
   const { userDetails } = useSelector((state) => state.userSelect);
   const visitUser = (idol) => {
@@ -174,17 +190,19 @@ const Profile = () => {
                 {" "}
                 <DragNDrop
                   sendImageToParent={handleData}
-                  title={"Choose an image for ad"}
+                  title={"Choose an image for your profile"}
                 />
                 <img src=""></img>
               </div>
-
-              <Components.Input
+<Tooltip title='Edit First name'>
+<Components.Input
                 type="text"
                 id="firstname"
                 placeholder="Re-enter firstname"
                 {...register("firstname")}
               />
+</Tooltip>
+             
                 {errors.firstname && (
                 <span style={{ color: "red" }}>
                   <TextAnimate2
@@ -192,12 +210,13 @@ const Profile = () => {
                   ></TextAnimate2>
                 </span>
               )}
+              <Tooltip title='Edit Last name'>
               <Components.Input
                 type="text"
                 id="lastname"
                 placeholder="Re-enter firstname"
                 {...register("lastname")}
-              />
+              /></Tooltip>
                  {errors.lastname && (
                 <span style={{ color: "red" }}>
                   <TextAnimate2
@@ -205,12 +224,13 @@ const Profile = () => {
                   ></TextAnimate2>
                 </span>
               )}
+              <Tooltip title='Edit Username'>
                 <Components.Input
                 type="text"
                 id="username"
                 placeholder="Re-enter username"
                 {...register("username")}
-              />
+              /></Tooltip>
                 {errors.username && (
                 <span style={{ color: "red" }}>
                   <TextAnimate2
@@ -291,7 +311,8 @@ const Profile = () => {
           margin: "5% 0 2% 0",
         }}
       >
-        <Avatar src="" sx={{ width: 150, height: 150 }} />
+       
+        <Avatar src={userInfo.data.image} sx={{ width: 150, height: 150 }} />
       </Box>
       <Box
         sx={{
