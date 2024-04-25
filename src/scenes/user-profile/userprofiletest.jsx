@@ -21,7 +21,7 @@ import { setUserDetailsSuccess } from '../../app/slices/userProfileSlice';
 import ModalThemed from '../../components/ModalThemed';
 
 
-const UserProfile = () => {
+const UserProfileTest = () => {
 
 
   const {userDetails,loading,error} = useSelector(state => state.userSelect)
@@ -67,7 +67,7 @@ const UserProfile = () => {
           console.log(idol);
           setShowModal(false)
           dispatch(setUserDetailsSuccess({ ...userDetails, userDetails: idol }));
-          navigate("/userprofile");
+          navigate("/userprofiletest");
       
         };
 
@@ -222,4 +222,4 @@ const UserProfile = () => {
   )
 }
 
-export default UserProfile
+export default UserProfileTest

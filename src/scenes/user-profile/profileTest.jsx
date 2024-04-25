@@ -33,7 +33,7 @@ import * as Components from "../login/Components";
 import DragNDrop from "../../components/DragNDrop";
 import { useForm } from "react-hook-form";
 
-const Profile = () => {
+const ProfileTest = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
@@ -164,7 +164,7 @@ const Profile = () => {
                       onClick={() => visitUser(idol)}
                       style={{ display: "flex", alignItems: "center" }}
                     >
-                      <Avatar src={idol?.image} />
+                      <Avatar src={idol.image} />
                       <p style={{ marginLeft: "0.5rem" }}>{idol.username}</p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -333,7 +333,7 @@ const Profile = () => {
         }}
       >
        
-        <Avatar src={userInfo.data?.image} sx={{ width: 150, height: 150 }} />
+        <Avatar src={userInfo.data.image} sx={{ width: 150, height: 150 }} />
       </Box>
       <Box
         sx={{
@@ -374,4 +374,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileTest;

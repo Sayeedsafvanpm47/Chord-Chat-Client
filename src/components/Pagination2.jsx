@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-export default function PaginationComponent({count,changePage,onPageChange,resetPage}) {
+export default function Pagination2({count,changePage,onPageChange,resetPage}) {
   const [page, setPage] = React.useState(1);
   React.useEffect(() => {
     if (resetPage) {

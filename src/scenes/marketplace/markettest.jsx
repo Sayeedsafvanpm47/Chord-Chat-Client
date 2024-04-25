@@ -54,7 +54,7 @@ import { MarketApi } from "../../api";
 import PaginationComponent from "../../components/Pagination";
 import Pagination2 from "../../components/Pagination2";
 
-const MarketPlace = () => {
+const MarketPlaceTest = () => {
   const navigate = useNavigate()
   const [page, setPage] = useState(1);
   const [ads, setAds] = useState([]);
@@ -235,7 +235,6 @@ const MarketPlace = () => {
 
   const viewAds = async (page) => {
     try {
-   
       const response = await MarketApi.get(`get-user-ads/${page}`);
       setUserAds(true);
       setTotalCount(response.data.totalCount);
@@ -246,9 +245,8 @@ const MarketPlace = () => {
 
   const viewAllAds = async () => {
     try {
-      setResetPage(true)
       setUserAds(false);
-    
+      setResetPage(true)
       fetchMarket(1);
     } catch (error) {}
   };
@@ -702,4 +700,4 @@ const MarketPlace = () => {
   );
 };
 
-export default MarketPlace;
+export default MarketPlaceTest;

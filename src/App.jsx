@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {CssBaseline,ThemeProvider} from '@mui/material'
 import {createTheme} from '@mui/material'
 import { themeSettings } from './theme'
@@ -22,6 +22,9 @@ import AdminMarket from './scenes/admin-marketplace'
 import adminAuth from './app/hooks/adminAuthRedirectionHook'
 import useAuth from './app/hooks/userAuthRedirectionHook'
 import UsersInfo from './scenes/admin-cutomers'
+import ProfileTest from './scenes/user-profile/profileTest'
+import UserProfileTest from './scenes/user-profile/userprofiletest'
+import MarketPlaceTest from './scenes/marketplace/markettest'
 
 
 
@@ -38,9 +41,10 @@ const App = () => {
 
   return (
     <div className='app'>
+          <ToastContainer></ToastContainer>
       <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <ToastContainer></ToastContainer>
+    
         <CssBaseline />
         <Routes>
         {/* <Route path='/' element={<LandingPage/>}/> */}
@@ -65,6 +69,9 @@ const App = () => {
             <Route path='/search' element={<SearchUsers/>}/>
             <Route path='/userprofile' element={<UserProfile/>}/>
             <Route path='/melodytrade' element={<MarketPlace/>}/>
+            <Route path='/profiletest' element={<ProfileTest/>}/>
+            <Route path='/test' element={<MarketPlaceTest/>}/>
+
           
 
             
