@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@mui/material/styles"; // Import useTheme hook
+import { Box, useMediaQuery } from "@mui/material";
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -55,7 +56,7 @@ const containerVariant = {
 
 const ModalThemed = ({ handleClose, children, isOpen,height,width }) => {
   const theme = useTheme(); // Access the theme
-  
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <AnimatePresence>
       {isOpen && (
@@ -67,7 +68,7 @@ const ModalThemed = ({ handleClose, children, isOpen,height,width }) => {
        
           theme={theme} // Pass the theme to the styled component
         >
-          <ModalContainer style={{height:height?height:'60%',width:width?width:'40%'}} variants={containerVariant} theme={theme}>
+          <ModalContainer style={{height:height?height:'60%',width:width?width:isSmallScreen?'70%':'40%',marginLeft:isSmallScreen?'30px':'0px',marginTop:isSmallScreen?'20px':'0px'}} variants={containerVariant} theme={theme}>
        
           <CloseButton
               onClick={handleClose}
@@ -100,7 +101,9 @@ const ModalThemed = ({ handleClose, children, isOpen,height,width }) => {
             </CloseButton>
           
             {children}
+            
           </ModalContainer>
+        
         </Overlay>
       )}
     </AnimatePresence>

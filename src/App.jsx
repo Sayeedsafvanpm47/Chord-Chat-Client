@@ -25,6 +25,9 @@ import UsersInfo from './scenes/admin-cutomers'
 import ProfileTest from './scenes/user-profile/profileTest'
 import UserProfileTest from './scenes/user-profile/userprofiletest'
 import MarketPlaceTest from './scenes/marketplace/markettest'
+import Gigs from './scenes/posts'
+import GigsTest from './scenes/posts/posttest'
+import InfiniteScrollComp from './scenes/posts/test'
 
 
 
@@ -41,7 +44,7 @@ const App = () => {
 
   return (
     <div className='app'>
-          <ToastContainer></ToastContainer>
+        <ToastContainer></ToastContainer>
       <BrowserRouter>
       <ThemeProvider theme={theme}>
     
@@ -70,7 +73,9 @@ const App = () => {
             <Route path='/userprofile' element={<UserProfile/>}/>
             <Route path='/melodytrade' element={<MarketPlace/>}/>
             <Route path='/profiletest' element={<ProfileTest/>}/>
-            <Route path='/test' element={<MarketPlaceTest/>}/>
+            {/* <Route path='/test' element={<MarketPlaceTest/>}/> */}
+            <Route path='/gigs' element={<Gigs/>}/>
+            <Route path='/test' element={<InfiniteScrollComp inProfile={false}/>}/>
 
           
 

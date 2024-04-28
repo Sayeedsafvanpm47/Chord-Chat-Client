@@ -32,6 +32,7 @@ import { setUserDetailsSuccess } from "../../app/slices/userProfileSlice";
 import * as Components from "../login/Components";
 import DragNDrop from "../../components/DragNDrop";
 import { useForm } from "react-hook-form";
+import GigsTest from "../posts/test";
 
 const Profile = () => {
   const theme = useTheme();
@@ -43,6 +44,8 @@ const Profile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [idolsFound, setIdolsFound] = useState([]);
   const [editProfile, setEditProfile] = useState(false);
+ 
+
 
 
   const schema = Yup.object().shape({
@@ -370,6 +373,7 @@ const Profile = () => {
           Gigs {userInfo.data.gigs ? userInfo.data.gigs.length : 0}{" "}
         </Typography>
       </Box>
+      <GigsTest inProfile={true}/>
     </>
   );
 };

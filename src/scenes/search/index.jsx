@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchUserDetails} from '../../app/slices/userProfileSlice';
 import { showToastError, showToastSuccess } from '../../services/toastServices';
 import { setCredentials } from '../../app/slices/authSlice';
+import HamsterLoading from '../../components/HamsterLoading';
 
 const SearchUsers = () => {
   const navigate = useNavigate()
@@ -46,16 +47,16 @@ const SearchUsers = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' ,marginBottom:'1rem'}}>
             <SearchBar onSearch={handleSearch} text={'Search for users...'} width={'50%'} />
           </Box>
         </Grid>
       </Grid>
 
-      {searchResults.length > 0 && (
+      {searchResults.length > 0 ? (
         <Box sx={{ display: 'block', margin: isMobile ? '5% auto' : '0 0% 10% 13%' }}> 
           <Container>
-            <h2>Search Results</h2>
+            <Typography variant='h4'>Search Results</Typography>
             {searchResults.map((item) => (
               <div key={item.id} style={{ height : '4rem' ,display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: isMobile ? '15rem' : '50rem' }}>
                 <div onClick={()=>handleViewUser(item)} style={{ display: 'flex',alignContent:'center', marginBottom: '2%', gap: '2%' }}>
@@ -75,7 +76,15 @@ const SearchUsers = () => {
             ))}
           </Container>
         </Box>
-      )}
+      ) : (<><Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+<Typography variant='h2'>Search for your favorite artists..</Typography>
+
+      </Box>
+      <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+      <HamsterLoading/>
+      </Box>
+   
+    </>)}
 
       <Divider />
       <Box sx={{ display: 'flex', fontSize: '60px' }}>{/* ... */}</Box>

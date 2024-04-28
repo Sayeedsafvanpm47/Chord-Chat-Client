@@ -26,7 +26,7 @@ import FlexBetween from '../../components/FlexBetween';
 import { Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../app/hooks/userAuthRedirectionHook';
 import {Navigate} from 'react-router-dom'
-import {faGuitar,faMessage,faBell,faSearch,faTicket,faShop,faUser,faMusic} from '@fortawesome/free-solid-svg-icons'
+import {faGuitar,faMessage,faBell,faSearch,faTicket,faShop,faUser,faMusic, faGauge, faUserFriends, faUsers, faCartShopping} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { viewProfile } from '../../services/sidebarNavigation';
 
@@ -196,7 +196,7 @@ const navigate = useNavigate()
                     justifyContent: 'center',
                   }}
                 >
-                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faGuitar}/>} 
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faGauge}/>} 
                 </ListItemIcon>
                 <ListItemText primary={'Dashboard'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
@@ -206,6 +206,7 @@ const navigate = useNavigate()
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/admin-users')}
               >
                 <ListItemIcon
                   sx={{
@@ -214,7 +215,7 @@ const navigate = useNavigate()
                     justifyContent: 'center',
                   }}
                 >
-                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faMessage}/>} 
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faUsers}/>} 
                 </ListItemIcon>
                 <ListItemText primary={'Users'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
@@ -232,9 +233,9 @@ const navigate = useNavigate()
                     justifyContent: 'center',
                   }}
                 >
-                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faBell}/>} 
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faGuitar}/>} 
                 </ListItemIcon>
-                <ListItemText primary={'Posts'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+                <ListItemText primary={'Gig management'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
               <ListItemButton
                 sx={{
@@ -251,9 +252,9 @@ const navigate = useNavigate()
                     justifyContent: 'center',
                   }}
                 >
-                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faSearch}/>} 
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faBell}/>} 
                 </ListItemIcon>
-                <ListItemText primary={'Notifications'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+                <ListItemText primary={'Notifications Management'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
               <ListItemButton
                 sx={{
@@ -261,6 +262,25 @@ const navigate = useNavigate()
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faCartShopping}/>} 
+                </ListItemIcon>
+                <ListItemText primary={'Ticket Orders'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  minHeight: 70,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+                onClick={()=>navigate('/')}
               >
                 <ListItemIcon
                   sx={{
@@ -271,25 +291,6 @@ const navigate = useNavigate()
                 >
                   {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faTicket}/>} 
                 </ListItemIcon>
-                <ListItemText primary={'Ticket Orders'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
-              </ListItemButton>
-              <ListItemButton
-                sx={{
-                  minHeight: 70,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-                onClick={()=>navigate('/melodytrade')}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faShop}/>} 
-                </ListItemIcon>
                 <ListItemText primary={'Ticket Counter'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
 
@@ -299,7 +300,7 @@ const navigate = useNavigate()
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
-                onClick={()=>navigate('/melodytrade')}
+                onClick={()=>navigate('/admin-market')}
               >
                 <ListItemIcon
                   sx={{

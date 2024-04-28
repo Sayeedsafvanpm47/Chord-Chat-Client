@@ -44,7 +44,7 @@ import {
   setMarketFailure,
 } from "../../app/slices/marketSlice";
 import ButtonHover from "../../components/ButtonHover";
-import AddButton from "../../components/AddButton";
+
 import ModalThemed from "../../components/ModalThemed";
 import * as Components from "../login/Components";
 import DragNDrop from "../../components/DragNDrop";
