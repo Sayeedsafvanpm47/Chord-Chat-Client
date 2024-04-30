@@ -28,6 +28,8 @@ import MarketPlaceTest from './scenes/marketplace/markettest'
 import Gigs from './scenes/posts'
 import GigsTest from './scenes/posts/posttest'
 import InfiniteScrollComp from './scenes/posts/test'
+import Paypal from './components/Paypal'
+import StripePay from './components/Paypal'
 
 
 
@@ -76,11 +78,13 @@ const App = () => {
             {/* <Route path='/test' element={<MarketPlaceTest/>}/> */}
             <Route path='/gigs' element={<Gigs/>}/>
             <Route path='/test' element={<InfiniteScrollComp inProfile={false}/>}/>
+            <Route path='/paypal' element={<StripePay/>}/>
 
           
 
             
           </Route>}
+          
 
           
         </Routes>
