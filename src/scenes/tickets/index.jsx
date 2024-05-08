@@ -123,6 +123,8 @@ const Tickets = () => {
       
     }
   }
+ 
+
 
   const decreaseQuantity = (itemId) => {
     setItemQuantities((prevQuantities) => ({
@@ -160,7 +162,7 @@ const Tickets = () => {
   const buyTicket = async (id) => {
     try {
           
-          const response = await TicketApi.post(`buy-ticket/${id}/${itemQuantities[id]}`)
+          const response = await TicketApi.post(`buy-ticket/${id}/${itemQuantities[id]?itemQuantities[id]:1}`)
           const body = { products: response.data.data }; 
           const stripe = await loadStripe('pk_test_51PBBfzSAq6ZQeUm6F7zc5nmohhb2ujfNSaXCZye8MJEH6VJ9sQRUKEoeL9OwR8Ma89T3NCmWsdV22ELeZbWp0j3D00w35T4oDq');
           try {

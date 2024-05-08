@@ -11,22 +11,17 @@ export const SocketProvider = ({children})=>{
          
           const {userInfo} = useSelector(state => state.auth)
           useEffect(() => {
-                    establishSocketConnection();
                 
-                    // Return a no-op function to indicate no cleanup needed
-                    
-                  }, [userInfo]); // Re-run effect when userInfo changes
-                
-                  const establishSocketConnection = () => {
-                    // If socket already exists, return
-                    if (socket.current) {
-                      return;
-                    }
-                
-                    // Establish new socket connection
                     socket.current = io('ws://localhost:3008');
-                  
-                  };
+                    return () => {
+                      if (socket.current) {
+                        socket.current.disconnect();
+                      }
+                    }
+                    
+                  }, []); // Re-run effect when userInfo changes
+                
+                
 
           return (<SocketContext.Provider value={socket}>
                     {children}

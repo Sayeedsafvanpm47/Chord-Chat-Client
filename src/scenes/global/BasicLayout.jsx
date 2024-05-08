@@ -30,6 +30,7 @@ import {faGuitar,faMessage,faBell,faSearch,faTicket,faShop,faUser,faMusic} from 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { viewProfile } from '../../services/sidebarNavigation';
 import { useSocket } from '../../utils/SocketContext';
+import { showToastSuccess } from '../../services/toastServices';
 
 const drawerWidth = 240;
 
@@ -143,9 +144,15 @@ if(!userAuth) return <Navigate to="/" replace />;
              setNotification(prev=>prev+1)
              
              })
+      socket.current.on('order-success',(data)=>{
+        console.log('order ok')
+        setNotification(prev=>prev+1)
+        showToastSuccess('order success')
+      })
      return ()=>{
       if (socket.current) {
         socket.current.off('like');
+        socket.current.off('order-success')
       }
     }
   }

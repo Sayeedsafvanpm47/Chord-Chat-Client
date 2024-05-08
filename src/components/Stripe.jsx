@@ -32,7 +32,7 @@ const makePayment = async token => {
     showToastSuccess('Order placed')
     if(socket.current)
       {
-        socket.emit('placed-order','')
+        socket.current.emit('payment-done','')
       }
     if (result.error) console.log(result.error);
   } catch (error) {
