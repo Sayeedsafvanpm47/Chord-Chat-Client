@@ -44,6 +44,7 @@ const Profile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [idolsFound, setIdolsFound] = useState([]);
   const [editProfile, setEditProfile] = useState(false);
+
  
 
 
@@ -133,6 +134,7 @@ const Profile = () => {
   };
   const handleLogout = async () => {
     try {
+      console.log('clicked logout')
       const response = await axios.post(
         "http://localhost:3001/api/users/signout"
       );
@@ -140,8 +142,9 @@ const Profile = () => {
       console.log(response);
       if (response) {
         dispatch(logout());
-        navigate("/", { replace: true });
         showToastSuccess(response.data?.message);
+        navigate("/", { replace: true });
+        
       }
     } catch (error) {}
   };

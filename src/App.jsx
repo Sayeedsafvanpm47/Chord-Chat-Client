@@ -28,8 +28,14 @@ import MarketPlaceTest from './scenes/marketplace/markettest'
 import Gigs from './scenes/posts'
 import GigsTest from './scenes/posts/posttest'
 import InfiniteScrollComp from './scenes/posts/test'
-import Paypal from './components/Paypal'
-import StripePay from './components/Paypal'
+import AdminTickets from './scenes/admin-tickets'
+import Tickets from './scenes/tickets'
+import { useSocket } from './utils/SocketContext'
+import { showToastSuccess } from './services/toastServices'
+import Notifications from './scenes/notifications'
+import Success from './scenes/order-success'
+
+
 
 
 
@@ -43,6 +49,7 @@ const App = () => {
     // Dispatch setMode action to toggle mode
     dispatch(setMode());
   };
+
 
   return (
     <div className='app'>
@@ -63,7 +70,7 @@ const App = () => {
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/admin-market' element={<AdminMarket/>}/>
             <Route path='/admin-users' element={<UsersInfo/>}/>
-           
+           <Route path='/ticket-counter' element={<AdminTickets/>}/>
           </Route>}
         {!userInfo?.data?.isAdmin && <Route element={<BasicLayout/>}>
             {/* <Route path='/' element={<Navigate to="/home" replace/> }/> */}
@@ -74,11 +81,14 @@ const App = () => {
             <Route path='/search' element={<SearchUsers/>}/>
             <Route path='/userprofile' element={<UserProfile/>}/>
             <Route path='/melodytrade' element={<MarketPlace/>}/>
+            <Route path='/notifications' element={<Notifications/>}/>
+            <Route path='/success' element={<Success/>}/>
             <Route path='/profiletest' element={<ProfileTest/>}/>
             {/* <Route path='/test' element={<MarketPlaceTest/>}/> */}
             <Route path='/gigs' element={<Gigs/>}/>
             <Route path='/test' element={<InfiniteScrollComp inProfile={false}/>}/>
-            <Route path='/paypal' element={<StripePay/>}/>
+            <Route path='/tickets' element={<Tickets/>}/>
+          
 
           
 

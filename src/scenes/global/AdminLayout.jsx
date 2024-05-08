@@ -280,7 +280,7 @@ const navigate = useNavigate()
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
-                onClick={()=>navigate('/')}
+                onClick={()=>navigate('/ticket-counter')}
               >
                 <ListItemIcon
                   sx={{

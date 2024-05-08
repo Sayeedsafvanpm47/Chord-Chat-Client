@@ -25,6 +25,7 @@ import PostLoading from "../../components/PostLoading";
 import { showToastError, showToastSuccess } from "../../services/toastServices";
 import { useSelector } from "react-redux";
 import { WhatsappShareButton } from "react-share";
+import { useSocket } from "../../utils/SocketContext";
 
 const GigsTest = ({inProfile}) => {
   const playerRef = useRef();
@@ -46,14 +47,35 @@ const GigsTest = ({inProfile}) => {
     try {
       setLoading(true);
       let response 
-      if(!userProfile){ response = await axios.get(
+      response = await axios.get(
         `http://localhost:3004/api/post-service/get-all-posts/${page}`,
         { withCredentials: true }
-      )}else{
+      )
+      if (page >= total) setHasMore(false);
+      if (page !== total) setHasMore(true);
+
+      console.log(response.data)
+      setTotal(response.data.totalCount);
+      setPost(response.data.posts);
+
+      setLoading(false);
+
+      console.log(post, "post in fetch");
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+ const socket = useSocket()
+  const fetchUserData = async (page) => {
+    try {
+      setLoading(true);
+      let response 
+      
         response = await axios.get(
           `http://localhost:3004/api/post-service/get-user-posts/${page}`,
           { withCredentials: true })
-      }
+      
       if (page >= total) setHasMore(false);
       if (page !== total) setHasMore(true);
 
@@ -73,11 +95,10 @@ const GigsTest = ({inProfile}) => {
   useEffect(() => {
     if(inProfile) 
     {
-      setUserProfile(true)
-      fetchData(page);
+      fetchUserData(page)
     }
     else
-    { setUserProfile(false)
+    { 
     fetchData(page);
     }
   }, []);
@@ -107,6 +128,9 @@ const GigsTest = ({inProfile}) => {
       );
 
       if (response.data.isLiked) {
+        if(socket.current){
+          socket.current.emit('show-like','liked')
+        }
         setLiked(true);
       } else {
         setLiked(false);

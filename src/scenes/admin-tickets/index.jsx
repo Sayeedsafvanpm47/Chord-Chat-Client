@@ -27,6 +27,7 @@ import {
   faDeleteLeft,
   faEdit,
   faFlag,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../../components/SearchBar";
 import axios from "axios";
@@ -50,14 +51,14 @@ import DragNDrop from "../../components/DragNDrop";
 import { useForm } from "react-hook-form";
 import TextAnimate2 from "../../components/TextAnimate2";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { MarketApi } from "../../api";
+import { MarketApi, TicketApi } from "../../api";
 import PaginationComponent from "../../components/Pagination";
 import Pagination2 from "../../components/Pagination2";
 
 const AdminTickets = () => {
   const navigate = useNavigate()
   const [page, setPage] = useState(1);
-  const [ads, setAds] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const dispatch = useDispatch();
   const [searchResults, setSearchResults] = useState([]);
   const theme = useTheme(); // Access the Material-UI theme
@@ -65,36 +66,36 @@ const AdminTickets = () => {
   const [creating,setCreating] = useState(false)
   const [showModal, setShowModal] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-  const [userAds, setUserAds] = useState(false);
-  const [editAdDetails, setEditAdDetails] = useState(null);
+  const [editTicketDetails, setEditTicketDetails] = useState(null);
+  const [editing,setEditing] = useState(false)
   const { userInfo } = useSelector((state) => state.auth);
-  const [resetPage,setResetPage] = useState(false)
 
-  const fetchMarket = async (page) => {
+
+  const fetchTickets = async (page) => {
     try {
-      const response = await MarketApi.get(`get-all-ads/${page}`);
+      const response = await axios.get(`http://localhost:3005/api/ticket-service/get-all-tickets/${page}`,{withCredentials:true})
       console.log(response.data);
-      setAds(response.data.data);
+      setTickets(response.data.data);
       setTotalCount(response.data.totalCount);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    fetchMarket(1);
+    fetchTickets(page);
    
-    setUserAds(false)
-  }, []);
+   
+  }, [page]);
 
   const handleSearch = async (value) => {
     try {
       if (value.trim() === "") {
         setSearchResults([]);
-        await fetchMarket(1)
+        await fetchTickets(1)
         return;
       }
       const response = await axios.post(
-        "http://localhost:3003/api/market/search-market",
+        "http://localhost:3005/api/ticket-service/search-tickets",
         { searchTerm: value },
         { withCredentials: true }
       );
@@ -107,7 +108,9 @@ const AdminTickets = () => {
 
   const schema = Yup.object().shape({
     description: Yup.string().required("Description is required"),
-    price: Yup.string().required("Price is required"),
+    price: Yup.number().required("Price is required"),
+    title:Yup.string().required('Title is required'),
+    stock:Yup.number().required('Stock is required')
   });
 
   const {
@@ -117,24 +120,31 @@ const AdminTickets = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const createAd = async () => {
+  const createTicket = async () => {
+   setEditing(false)
     setShowModal(true);
+   
+
   };
-  const editAd = async (id)=>{
-    const findAdIndex = ads.findIndex(ad=>ad._id==id)
-    let foundAd
-    if(findAdIndex !== -1)
+  const editTicket = async (id)=>{
+    const findTicketIndex = tickets.findIndex(ticket=>ticket._id==id)
+    let foundTicket
+    setEditing(true)
+    if(findTicketIndex !== -1)
     {
-      foundAd = ads[findAdIndex]
-      setEditAdDetails(foundAd)
-      setValue("description", foundAd.description);
-      setValue("price", foundAd.price);
+      foundTicket = tickets[findTicketIndex]
+      setEditTicketDetails(foundTicket)
+      setValue("description", foundTicket.description);
+      setValue("price", foundTicket.price);
+      setValue("title", foundTicket.title);
+      setValue("stock", foundTicket.stock);
+    
     }
-    console.log(foundAd,'found ad')
+    console.log(foundTicket,'found ticket')
    
    
    
-    console.log(editAdDetails,'ad details')
+    console.log(editTicketDetails,'ticket details')
     setShowModal(true)
   }
 
@@ -146,163 +156,106 @@ const AdminTickets = () => {
     setImageData(data);
     console.log(imageData, "from parent");
   };
-  const submitAd = async (data) => {
-  
-    console.log(typeof imageData, "type of data");
-    console.log(imageData, "data");
-  
-    if(editAdDetails)
-    {
-      const formData = new FormData();
-      console.log(data,'data')
-        imageData && formData.append('image',imageData)
-        console.log(imageData,'imageDAta')
-        let descriptionData = document.getElementById('description').value 
-        let priceData = document.getElementById('price').value
-        descriptionData && formData.append('description',descriptionData)
-        priceData && formData.append('price',priceData)
-        console.log(descriptionData,'desv')
-        console.log(priceData,'price')
-        console.log(formData,'form')
-        try {
-          setCreating(true)
-          const response = await MarketApi.patch(`/edit-ad/${editAdDetails._id}`,formData)
-          if(response)
-          {
-           
-            console.log(response.data);
-            setShowModal(false);
-            
-            showToastSuccess(response.data.message);
-            setPage(1)
-            setUserAds(false)
-            setEditAdDetails(null)
-            setValue("description", '');
-            setValue("price",'');
-            setResetPage(true)
-            await fetchMarket(1)
-          }
-
-        } catch (error) {
-          
-          showToastError('Error while editing the ad!')
-        }finally{
-          setCreating(false)
-        }
-      
-
-    }else
-    {
-    if (imageData && data.description && data.price) {
-      const formData = new FormData();
-      formData.append("description", data.description);
-      formData.append("price", data.price);
-      formData.append("image", imageData);
-     
-      try {
-        setCreating(true)
-        const response = await MarketApi.post("createAd", formData);
-       
-        if(response)
-        {
-         
-          console.log(response.data);
-          setShowModal(false);
-          
-          showToastSuccess("Successfully posted the ad");
-          setPage(1)
-          setUserAds(false)
-          setResetPage(true)
-          await fetchMarket(1)
-        }
-      
-
-      } catch (error) {
-        setCreating(false)
-        showToastError('Error occured!')
-        console.log(error);
-      }finally{
-        setCreating(false)
-      }
-    
-    } else {
-      console.error("Missing required data for form submission");
-    }
-  }
-  };
-
-
-
-  const viewAds = async (page) => {
-    try {
+  const submitEditTicket = async (data) => {
+    const formData = new FormData();
+    imageData && formData.append('image', imageData);
+    formData.append('description', data.description || '');
+    formData.append('price', data.price || '');
+    formData.append('stock', data.stock || '');
+    formData.append('title', data.title || '');
    
-      const response = await MarketApi.get(`get-user-ads/${page}`);
-      setUserAds(true);
-      setTotalCount(response.data.totalCount);
-      setAds(response.data.data);
+  
+    try {
+      setCreating(true);
     
-    } catch (error) {}
-  };
-
-  const viewAllAds = async () => {
-    try {
-      setResetPage(true)
-      setUserAds(false);
+      const response = await axios.patch(`http://localhost:3005/api/ticket-service/edit-ticket/${editTicketDetails._id}`, formData, { withCredentials: true });
     
-      fetchMarket(1);
-    } catch (error) {}
+      if (response) {
+        console.log(response.data);
+        setShowModal(false);
+        showToastSuccess(response.data.message);
+        setPage(1);
+        setEditTicketDetails(null);
+        
+     
+        await fetchTickets(1);
+      }
+    } catch (error) {
+      showToastError('Error while editing the ticket!');
+      console.error(error);
+    } finally {
+      setCreating(false);
+    }
   };
-
-  const shareAd = async (adId) => {
+  const toggleTicket = async (id) => {
     try {
-      const response = await MarketApi.get(`share-ad/${adId}`);
-      console.log(response, "sharead");
-      const link = await response.data;
-
-      const modalWidth = 600;
-      const modalHeight = 400;
-      const left = (window.innerWidth - modalWidth) / 2;
-      const top = (window.innerHeight - modalHeight) / 2;
-      const modalOptions = `width=${modalWidth},height=${modalHeight},top=${top},left=${left},toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no`;
-      window.open(link, "_blank", modalOptions);
-    } catch (error) {}
-  };
-
-  const flagAd = async (id) => {
-    try {
-      const response = await MarketApi.patch(`flag-ad/${id}`)
-      console.log(response,'ad flag response')
+      const response = await TicketApi.patch(`toggle-show-ticket/${id}`)
+      console.log(response,'Ticket show response')
       showToastSuccess(response.data.message)
+      await fetchTickets(1)
 
     } catch (error) {
       console.log(error)
       showToastError('Error occured!')
     }
   };
+  
+  const submitCreateTicket = async (data) => {
+    if (imageData && data.description && data.price && data.title && data.stock) {
+      const formData = new FormData();
+      formData.append("description", data.description);
+      formData.append("price", data.price);
+      formData.append("stock", data.stock);
+      formData.append("title", data.title);
+      formData.append("image", imageData);
+      try {
+        setCreating(true);
+        const response = await TicketApi.post("/create-ticket", formData);
+        if (response) {
+          console.log(response.data);
+          setShowModal(false);
+          showToastSuccess("Successfully created ticket");
+          setPage(1);
+         
+          await fetchTickets(1);
+        }
+      } catch (error) {
+        setCreating(false);
+        showToastError('Error occurred while creating the ticket!');
+        console.error(error);
+      } finally {
+        setCreating(false);
+      }
+    } else {
+      console.error("Missing required data for form submission");
+    }
+  };
+  
 
-  const deleteAd = async (id)=>{
+
+
+
+
+
+  const deleteTicket = async (id)=>{
     try {
-      const response = await MarketApi.delete(`delete-ad/${id}`)
+      console.log(id,'ticket id')
+      const response = await TicketApi.delete(`delete-ticket/${id}`)
       console.log(response)
       showToastSuccess(response.data.message)
       setPage(1)
-      setUserAds(false)
-      setResetPage(true)
-      await fetchMarket(1)
+   
+      await fetchTickets(1)
     } catch (error) {
-      showToastError('Failed to delete ad!')
+      showToastError('Failed to delete ticket!')
     }
   }
   const handlePage = async (newpage) => {
     setPage(newpage);
-    setResetPage(false)
+   
     console.log(newpage, "newpage");
-    if (userAds) {
-      viewAds(newpage);
-    } else {
-     
       fetchMarket(newpage);
-    }
+    
   };
 
   if (loading) return <p>Loading...</p>;
@@ -318,14 +271,14 @@ const AdminTickets = () => {
         <Container sx={{ marginTop: "5%" }}>
           <Components.Form
             enctype="multipart/form-data"
-            onSubmit={handleSubmit(submitAd)}
+            onSubmit={handleSubmit(!editing?submitCreateTicket:submitEditTicket)}
             style={{
               backgroundColor:
                 theme.palette.mode == "dark" ? "#333333" : "white",
             }}
           >
             <Components.ParagraphModal>
-              Let's post your ad and sell/exchange your instrument! 🎹 🎸
+              Let's sell some tickets!
             </Components.ParagraphModal>
 
             <div
@@ -338,15 +291,30 @@ const AdminTickets = () => {
               {" "}
               <DragNDrop
                 sendImageToParent={handleData}
-                title={"Choose an image for ad"}
+                title={"Choose an image for ticket"}
               />
               <img src=""></img>
             </div>
-
+            <Components.Input
+              type="text"
+              id="title"
+              Testholder="Enter Title"
+              placeholder="Enter Title"
+              {...register("title")}
+              
+            />
+            {errors.title && (
+              <span style={{ color: "red" }}>
+                <TextAnimate2
+                  textProp={errors.title.message}
+                ></TextAnimate2>
+              </span>
+            )}
             <Components.Input
               type="text"
               id="description"
               Testholder="Enter Description"
+              placeholder="Enter Description"
               {...register("description")}
               
             />
@@ -358,9 +326,10 @@ const AdminTickets = () => {
               </span>
             )}
             <Components.Input
-              type="text"
+              type="number"
               id="price"
               name="price"
+              Testholder="price"
               placeholder="Price"
               {...register("price")}
              
@@ -368,6 +337,21 @@ const AdminTickets = () => {
             {errors.price && (
               <span style={{ color: "red" }}>
                 <TextAnimate2 textProp={errors.price.message}></TextAnimate2>
+              </span>
+            )}
+                  <Components.Input
+              type="number"
+              id="stock"
+              Testholder="Enter Stock"
+              placeholder="Enter Stock"
+              {...register("stock")}
+              
+            />
+            {errors.stock && (
+              <span style={{ color: "red" }}>
+                <TextAnimate2
+                  textProp={errors.stock.message}
+                ></TextAnimate2>
               </span>
             )}
 
@@ -379,13 +363,7 @@ const AdminTickets = () => {
                 marginTop: "2%",
               }}
             >
-              <Components.Button type="submit">{creating 
-    ? (editAdDetails !== null 
-      ? 'Editing Ad..' 
-      : 'Creating ad..') 
-    : (editAdDetails !== null 
-      ? 'Edit your Ad' 
-      : 'Post your Ad')}</Components.Button>
+              <Components.Button type="submit">{creating ? (editTicketDetails !== null ? 'Editing Ticket' : 'Creating Ticket') : (editTicketDetails !== null ? 'Edit ticket' : 'Create ticket') }</Components.Button>
             </div>
           </Components.Form>
         </Container>
@@ -406,29 +384,21 @@ const AdminTickets = () => {
               text={"Search for the best deals..."}
               width={"50%"}
             />
-            <span onClick={createAd}>
-              <ButtonHover text={"Post Ad"} />
+            <span onClick={createTicket}>
+              <ButtonHover text={"Create Ticket"} />
             </span>
-            {!userAds ? (
-              <span onClick={viewAds}>
-                <ButtonHover text={"Your Ads"} />
-              </span>
-            ) : (
-              <span onClick={viewAllAds}>
-                <ButtonHover text={"View All ads"} />
-              </span>
-            )}
+            
           </Box>
         </Grid>
       </Grid>
       <Divider />
 
       {searchResults.length == 0 &&
-        (ads?.length > 0 ? (
+        (tickets?.length > 0 ? (
           <div>
             {" "}
             <List>
-              {ads.map((item, index) => {
+              {tickets.map((item, index) => {
                 return (
                   <ListItem
                     key={item._id}
@@ -463,8 +433,8 @@ const AdminTickets = () => {
                         }}
                       >
                         <img
-                          src={item.image}
-                          alt={item.description}
+                          src={item?.image}
+                          alt={item?.description}
                           style={{
                             width: "100%",
                             height: "100%",
@@ -473,17 +443,22 @@ const AdminTickets = () => {
                         />
                       </div>
                       <Box>
-                        <Typography variant="h2">{item.description}</Typography>
-                        <Typography variant="h5">{item.username}</Typography>
-                        <Typography variant="body1">Location</Typography>
+                        <Typography variant="h2">{item?.title}</Typography>
+                        <Typography variant="h5">{item?.description}</Typography>
+                      
                         <Typography
                           variant="h4"
                           sx={{ color: "text.secondary" }}
                         >
-                          Price: &#8377;{item.price}.00
+                          Price: $ {item?.price}.00
                         </Typography>
                         <Typography variant="body1">Inc Tax.</Typography>
-                        <Typography variant="body1">Ad posted on:</Typography>
+                        <Typography variant="body1">Expiring on: {item?.expiringAt}</Typography>
+                        <Typography variant="body1">Venue:</Typography>
+                        <Typography variant="body1">Dated:</Typography>
+                        <Typography variant="body1">Flag count:</Typography>
+                        <Typography variant="body1">Sales count:</Typography>
+                        <Typography variant="body1">Ticket status: </Typography>
                         <Box
                           sx={{
                             display: "flex",
@@ -491,63 +466,41 @@ const AdminTickets = () => {
                             fontSize: "3rem",
                           }}
                         >
-                          {!userAds &&
-                            userInfo.data.username !== item.username && (
-                              <Tooltip title="Request reply">
-                                <span style={{ cursor: "pointer" }}>
-                                  <FontAwesomeIcon
-                                    icon={faMessage}
-                                  ></FontAwesomeIcon>
-                                </span>
-                              </Tooltip>
-                            )}
-                          {!userAds && (
-                            <Tooltip title="Share Ad">
-                              <span
-                                onClick={() => shareAd(item._id)}
-                                style={{ cursor: "pointer" }}
-                              >
-                                {" "}
-                                <FontAwesomeIcon
-                                  icon={faShare}
-                                ></FontAwesomeIcon>
-                              </span>
-                            </Tooltip>
-                          )}
-                          {!userAds &&
-                            userInfo.data.username !== item.username && (
-                              <Tooltip title="Flag Ad?">
-                                <span
-                                  onClick={() => flagAd(item._id)}
-                                  style={{ cursor: "pointer" }}
-                                >
-                                  {" "}
-                                  <FontAwesomeIcon
-                                    icon={faFlag}
-                                  ></FontAwesomeIcon>
-                                </span>
-                              </Tooltip>
-                            )}
-                          {userAds && (
-                            <Tooltip title="Delete Ad?">
-                              <span onClick={()=>deleteAd(item._id)} style={{ cursor: "pointer" }}>
+                        
+                         
+                            <Tooltip title="Delete Ticket?">
+                              <span onClick={()=>deleteTicket(item._id)} style={{ cursor: "pointer" }}>
                                 {" "}
                                 <FontAwesomeIcon
                                   icon={faTrash}
                                 ></FontAwesomeIcon>
                               </span>
                             </Tooltip>
-                          )}
-                          {userAds && (
+                         
+                       
                             <Tooltip title="Edit Ad?">
-                              <span onClick={()=>editAd(item._id)} style={{ cursor: "pointer" }}>
+                              <span onClick={()=>editTicket(item._id)} style={{ cursor: "pointer" }}>
                                 {" "}
                                 <FontAwesomeIcon
                                   icon={faEdit}
                                 ></FontAwesomeIcon>
                               </span>
                             </Tooltip>
-                          )}
+
+                            <Tooltip title="Toggle ticket visiblity?">
+                                <span
+                                  onClick={() => toggleTicket(item._id)}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {" "}
+                                {item.visibility ? (<FontAwesomeIcon
+                                    icon={faEye}
+                                  ></FontAwesomeIcon>) : (<FontAwesomeIcon
+                                    icon={faEyeSlash}
+                                  ></FontAwesomeIcon>)}
+                                </span>
+                              </Tooltip>
+                          
                         </Box>
                       </Box>
                     </Box>
@@ -557,7 +510,7 @@ const AdminTickets = () => {
             </List>
           </div>
         ) : (
-          "no ads posted"
+          "no tickets available"
         ))}
 
       {searchResults?.length > 0 && (
@@ -600,8 +553,8 @@ const AdminTickets = () => {
                         }}
                       >
                         <img
-                          src={item.image}
-                          alt={item.description}
+                          src={item?.image}
+                          alt={item?.description}
                           style={{
                             width: "100%",
                             height: "100%",
@@ -610,17 +563,19 @@ const AdminTickets = () => {
                         />
                       </div>
                       <Box>
-                        <Typography variant="h2">{item.description}</Typography>
-                        <Typography variant="h5">{item.username}</Typography>
-                        <Typography variant="body1">Location</Typography>
+                        <Typography variant="h2">{item?.title}</Typography>
+                        <Typography variant="h5">{item?.description}</Typography>
+                      
                         <Typography
                           variant="h4"
                           sx={{ color: "text.secondary" }}
                         >
-                          Price: &#8377;{item.price}.00
+                          Price: $ {item?.price}.00
                         </Typography>
                         <Typography variant="body1">Inc Tax.</Typography>
-                        <Typography variant="body1">Ad posted on:</Typography>
+                        <Typography variant="body1">Expiring on: {item?.expiringAt}</Typography>
+                        <Typography variant="body1">Venue:</Typography>
+                        <Typography variant="body1">Dated:</Typography>
                         <Box
                           sx={{
                             display: "flex",
@@ -628,63 +583,27 @@ const AdminTickets = () => {
                             fontSize: "3rem",
                           }}
                         >
-                          {!userAds &&
-                            userInfo.data.username !== item.username && (
-                              <Tooltip title="Request reply">
-                                <span style={{ cursor: "pointer" }}>
-                                  <FontAwesomeIcon
-                                    icon={faMessage}
-                                  ></FontAwesomeIcon>
-                                </span>
-                              </Tooltip>
-                            )}
-                          {!userAds && (
-                            <Tooltip title="Share Ad">
-                              <span
-                                onClick={() => shareAd(item._id)}
-                                style={{ cursor: "pointer" }}
-                              >
-                                {" "}
-                                <FontAwesomeIcon
-                                  icon={faShare}
-                                ></FontAwesomeIcon>
-                              </span>
-                            </Tooltip>
-                          )}
-                          {!userAds &&
-                            userInfo.data.username !== item.username && (
-                              <Tooltip title="Flag Ad?">
-                                <span
-                                  onClick={() => flagAd(item._id)}
-                                  style={{ cursor: "pointer" }}
-                                >
-                                  {" "}
-                                  <FontAwesomeIcon
-                                    icon={faFlag}
-                                  ></FontAwesomeIcon>
-                                </span>
-                              </Tooltip>
-                            )}
-                          {userAds && (
-                            <Tooltip title="Delete Ad?">
-                              <span onClick={()=>deleteAd(item._id)} style={{ cursor: "pointer" }}>
+                        
+                         
+                            <Tooltip title="Delete Ticket?">
+                              <span onClick={()=>deleteTicket(item?._id)} style={{ cursor: "pointer" }}>
                                 {" "}
                                 <FontAwesomeIcon
                                   icon={faTrash}
                                 ></FontAwesomeIcon>
                               </span>
                             </Tooltip>
-                          )}
-                          {userAds && (
+                         
+                       
                             <Tooltip title="Edit Ad?">
-                              <span onClick={()=>editAd(item._id)} style={{ cursor: "pointer" }}>
+                              <span onClick={()=>editTicket(item._id)} style={{ cursor: "pointer" }}>
                                 {" "}
                                 <FontAwesomeIcon
                                   icon={faEdit}
                                 ></FontAwesomeIcon>
                               </span>
                             </Tooltip>
-                          )}
+                          
                         </Box>
                       </Box>
                     </Box>
@@ -697,7 +616,7 @@ const AdminTickets = () => {
 
       <Divider />
       <Box sx={{ display: "flex", fontSize: "60px" }}>{/* ... */}</Box>
-    { searchResults.length == 0 &&  <Pagination2 resetPage={resetPage} onPageChange={handlePage} count={totalCount} />}
+    { searchResults.length == 0 &&  <Pagination2 onPageChange={handlePage} count={totalCount} />}
     </>
   );
 };

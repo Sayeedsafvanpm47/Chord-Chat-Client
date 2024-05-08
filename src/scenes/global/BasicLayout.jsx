@@ -29,6 +29,7 @@ import {Navigate} from 'react-router-dom'
 import {faGuitar,faMessage,faBell,faSearch,faTicket,faShop,faUser,faMusic} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { viewProfile } from '../../services/sidebarNavigation';
+import { useSocket } from '../../utils/SocketContext';
 
 const drawerWidth = 240;
 
@@ -113,8 +114,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function BasicLayout() {
+  const socket = useSocket()
 const navigate = useNavigate()
 const userAuth = useAuth()
+const [notification,setNotification] = React.useState(0)
 if(!userAuth) return <Navigate to="/" replace />;
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -128,7 +131,26 @@ if(!userAuth) return <Navigate to="/" replace />;
     setOpen(false);
   };
   let width = open ? '85vw' : '95vw'
-  
+
+  React.useEffect(() => {
+   console.log(socket,'socket')
+   if (socket.current) {
+   //   socket.on('order', (data) => {
+   //     setNotification(data); // Update notification state with received data
+   //   })
+     console.log(socket.current)
+     socket.current.on('like',(data)=>{
+             setNotification(prev=>prev+1)
+             
+             })
+     return ()=>{
+      if (socket.current) {
+        socket.current.off('like');
+      }
+    }
+  }
+   
+ }, [socket.current]);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -186,6 +208,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/test')}
               >
                 <ListItemIcon
                   sx={{
@@ -222,6 +245,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/notifications')}
               >
                 <ListItemIcon
                   sx={{
@@ -232,7 +256,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                 >
                   {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faBell}/>} 
                 </ListItemIcon>
-                <ListItemText primary={'Notifications'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+                <ListItemText primary={'Notifications'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} /> <span>{notification}</span>
               </ListItemButton>
               <ListItemButton
                 sx={{
@@ -259,6 +283,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/tickets')}
               >
                 <ListItemIcon
                   sx={{
