@@ -53,6 +53,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { MarketApi } from "../../api";
 import PaginationComponent from "../../components/Pagination";
 import Pagination2 from "../../components/Pagination2";
+import HamsterLoading from "../../components/HamsterLoading";
 
 const MarketPlace = () => {
   const navigate = useNavigate()
@@ -305,7 +306,11 @@ const MarketPlace = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return<Container>
+    <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+    <HamsterLoading/>
+    </Box>
+  </Container>;
 
   return (
     <>
@@ -557,7 +562,17 @@ const MarketPlace = () => {
             </List>
           </div>
         ) : (
-          "no ads posted"
+          <>
+         <Container>
+  <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+ <div>
+ <HamsterLoading/>
+        <Typography variant="h5">No ads posted!</Typography>
+ </div>
+  </Box>
+</Container>;
+        
+        </>
         ))}
 
       {searchResults?.length > 0 && (

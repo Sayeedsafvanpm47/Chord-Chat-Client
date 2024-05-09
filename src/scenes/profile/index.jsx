@@ -45,6 +45,7 @@ const Profile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [idolsFound, setIdolsFound] = useState([]);
   const [editProfile, setEditProfile] = useState(false);
+  const [gigsCount,setGigsCount] = useState(0)
 
  
 
@@ -70,6 +71,10 @@ const Profile = () => {
     setImageData(data);
     console.log(imageData, "from parent");
   };
+  const processGigs = async (data)=>{
+    console.log(data,'gig count')
+    setGigsCount(data)
+ }
 
   const showIdols = async () => {
     const userId = userInfo.data._id;
@@ -353,7 +358,7 @@ const Profile = () => {
       >
         <FlexBetween sx={{ width: "40vw" }}>
           <Typography sx={{ fontSize: "20px" }} paragraph>
-            {userInfo.data.gigs ? userInfo.data.gigs.length : 0} Gigs
+            {gigsCount} Gigs
           </Typography>
            <div onClick={showFansData}>
            <Typography sx={{ fontSize: "20px" }} paragraph>
@@ -375,10 +380,10 @@ const Profile = () => {
       <Box sx={{ display: "flex", fontSize: "60px" }}>
         <FontAwesomeIcon icon={faGuitar} />
         <Typography sx={{ fontSize: "20px", margin: "2% 0 0 0" }}>
-          Gigs {userInfo.data.gigs ? userInfo.data.gigs.length : 0}{" "}
+          Gigs {gigsCount}
         </Typography>
       </Box>
-      <UserGigs/>
+      <UserGigs numberOfGigs={processGigs}/>
     </>
   );
 };

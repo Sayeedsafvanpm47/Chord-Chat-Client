@@ -19,6 +19,7 @@ import SpaceError from '../../components/SpaceError';
 import ButtonHover from '../../components/ButtonHover';
 import { setUserDetailsSuccess } from '../../app/slices/userProfileSlice';
 import ModalThemed from '../../components/ModalThemed';
+import SelectedUserGigs from '../posts/selectedusergig';
 
 
 const UserProfile = () => {
@@ -31,9 +32,11 @@ const UserProfile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [idolsFound, setIdolsFound] = useState([]);
   const [editProfile, setEditProfile] = useState(false);
+  const [gigsCount,setGigsCount] = useState(0)
+
   const navigate = useNavigate()
 
-
+  
   const showIdols = async () => {
           const userId = userDetails.userDetails._id;
           setEditProfile(false);
@@ -47,7 +50,9 @@ const UserProfile = () => {
           setModalTitle("Your Idols");
           setShowModal(true);
         };
-      
+      const processGigs = (data)=>{
+         setGigsCount(data)
+      }
         const showFansData = async ()=>{
           console.log('clicked fans')
           const userId = userDetails.userDetails._id;
@@ -179,7 +184,7 @@ const UserProfile = () => {
 </Box>
 <Box sx={{display:'flex',justifyContent:'center',alignItems:'center', margin:'0 0 5% 0'}}>
 <FlexBetween sx={{gap:'2rem'}}>
-  <Typography sx={{fontSize:'20px'}} paragraph>{userDetails.userDetails.gigs ? userDetails.userDetails.gigs.length : 0 } Gigs</Typography> 
+  <Typography sx={{fontSize:'20px'}} paragraph>{gigsCount} Gigs</Typography> 
   <span onClick={showFansData}><Typography sx={{fontSize:'20px'}} paragraph>{userDetails.userDetails.fans ? userDetails.userDetails.fans.length : 0 } Fans</Typography></span> 
   <span onClick={showIdols}><Typography sx={{fontSize:'20px'}} paragraph>{userDetails.userDetails.idols ? userDetails.userDetails.idols.length : 0 } Idols</Typography></span> 
 
@@ -203,10 +208,11 @@ const UserProfile = () => {
  
   <Box sx={{display:'flex',fontSize:'60px'}}>
   <FontAwesomeIcon icon={faGuitar}/>
-  <Typography sx={{fontSize:'20px',margin:'2% 0 0 0'}}>Gigs {userDetails.userDetails.gigs ? userDetails.userDetails.gigs.length : 0 } </Typography>
+  <Typography sx={{fontSize:'20px',margin:'2% 0 0 0'}}>Gigs {gigsCount } </Typography>
  
 
   </Box>
+  <SelectedUserGigs numberOfGigs={processGigs}/>
  
 
 

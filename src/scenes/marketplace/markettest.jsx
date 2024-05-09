@@ -303,7 +303,11 @@ const MarketPlaceTest = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return<Container>
+    <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+    <HamsterLoading/>
+    </Box>
+  </Container>;
 
   return (
     <>

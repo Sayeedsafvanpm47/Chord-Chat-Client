@@ -60,6 +60,7 @@ import { MarketApi, TicketApi } from "../../api";
 import PaginationComponent from "../../components/Pagination";
 import Pagination2 from "../../components/Pagination2";
 import { loadStripe } from "@stripe/stripe-js";
+import HamsterLoading from "../../components/HamsterLoading";
 
 
 const Tickets = () => {
@@ -198,8 +199,11 @@ const Tickets = () => {
     fetchMarket(newpage);
   };
 
-  if (loading) return <p>Loading...</p>;
-
+  if (loading) return<Container>
+    <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+    <HamsterLoading/>
+    </Box>
+  </Container>;
   return (
     <>
       <ModalThemed
@@ -362,7 +366,18 @@ const Tickets = () => {
             </List>
           </div>
         ) : (
-          "no tickets available"
+          <>
+         <Container>
+    <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+   <div>
+   <HamsterLoading/>
+          <Typography variant="h5">No tickets available</Typography>
+   </div>
+    </Box>
+  </Container>;
+          
+          </>
+          
         ))}
 
       {searchResults?.length > 0 && (

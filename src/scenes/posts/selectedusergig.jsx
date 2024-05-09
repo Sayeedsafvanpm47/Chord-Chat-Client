@@ -27,10 +27,8 @@ import { showToastError, showToastSuccess } from "../../services/toastServices";
 import { useSelector } from "react-redux";
 import { WhatsappShareButton } from "react-share";
 import { useSocket } from "../../utils/SocketContext";
-import HamsterLoading from "../../components/HamsterLoading";
 
-
-const GigsTest = ({inProfile}) => {
+const SelectedUserGigs = ({numberOfGigs}) => {
   const playerRef = useRef();
   const [play, setPlay] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -44,24 +42,33 @@ const GigsTest = ({inProfile}) => {
   const [liked, setLiked] = useState(false);
   const [likedPostInfo,setLikedPostInfo] = useState([])
   const [userComment, setUserComment] = useState("");
-  const { userInfo } = useSelector((state) => state.auth);
+  const {userDetails} = useSelector(state => state.userSelect)
  const [userProfile,setUserProfile] = useState(false)
 
-  const fetchData = async (page) => {
+  
+ const socket = useSocket()
+  const fetchUserData = async (page) => {
     try {
       setLoading(true);
       let response 
-      response = await axios.get(
-        `http://localhost:3004/api/post-service/get-all-posts/${page}`,
-        { withCredentials: true }
-      )
+    
+    
+       
+          const selectedUserId = userDetails.userDetails._id
+          console.log(selectedUserId)
+          response = await axios.get(
+            `http://localhost:3004/api/post-service/get-user-posts/${page}/${selectedUserId}`,
+            { withCredentials: true })
+       
+       
+      
       if (page >= total) setHasMore(false);
       if (page !== total) setHasMore(true);
 
       console.log(response.data)
       setTotal(response.data.totalCount);
       setPost(response.data.posts);
-
+      numberOfGigs(response.data.totalCount)
       setLoading(false);
 
       console.log(post, "post in fetch");
@@ -70,8 +77,6 @@ const GigsTest = ({inProfile}) => {
       setLoading(false);
     }
   };
- const socket = useSocket()
-  
    const fetchLikedPosts = async ()=>{
     try {
       const response = await axios.get('http://localhost:3002/api/user-service/get-liked-posts',{withCredentials:true})
@@ -87,8 +92,8 @@ const GigsTest = ({inProfile}) => {
 
   useEffect(() => {
     
+      fetchUserData(page)
     
-    fetchData(page);
     fetchLikedPosts()
     
   }, []);
@@ -106,7 +111,7 @@ const GigsTest = ({inProfile}) => {
     }
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchData(nextPage);
+    fetchUserData(nextPage);
   };
 
   const flagPost = async (id) => {
@@ -144,7 +149,7 @@ const GigsTest = ({inProfile}) => {
     if (page > 1) {
       const prevPage = page - 1; // Decrement page
       setPage(prevPage); // Update page state
-      fetchData(prevPage); // Fetch data using the updated page value
+      fetchUserData(prevPage); // Fetch data using the updated page value
     }
   };
   const togglePlay = async () => {
@@ -252,16 +257,12 @@ const GigsTest = ({inProfile}) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (loading) return<Container>
-    <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-    <HamsterLoading/>
-    </Box>
-  </Container>;
+  if (loading) return <p>Loading...</p>;
   return (
     <>
       {post &&
         post.map((postItem) => (
-          <div key={postItem._id} >
+          <div key={postItem._id}>
             {" "}
             <Grid container spacing={2}>
               <Grid item xs={12} md={"4"}>
@@ -278,19 +279,17 @@ const GigsTest = ({inProfile}) => {
                 {/* Video Player with Hover Icons */}
 
                 <Box onClick={togglePlay} sx={{ position: "relative" }}>
-                 
-                <div style={{ borderRadius: "20px"}}>
-    <ReactPlayer
-      volume={1}
-      ref={playerRef}
-      url={postItem.video}
-      height="80vh"
-      width="100%"
-      playing={play}
-      loop={true}
-    />
-  </div>
-               
+                  <Box style={{ borderRadius: "20px", background: theme.palette.mode == 'dark' ? "linear-gradient(180deg, #323232 0%, #000000 100%)" : "linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%)" }}>
+                    <ReactPlayer
+                      volume={1}
+                      ref={playerRef}
+                      url={postItem.video}
+                      height="80vh"
+                      width="100%"
+                      playing={play}
+                      loop={true}
+                    />
+                  </Box>
 
                   <Box
                     sx={{
@@ -318,7 +317,7 @@ const GigsTest = ({inProfile}) => {
                     >
                       <FontAwesomeIcon
                         onClick={() => likePost(postItem._id)}
-                        color={inProfile ? 'white' : likedPostInfo.find(item => item == postItem._id) ? 'red' : 'white' }
+                        color={likedPostInfo.find(item => item == postItem._id) ? 'red' : 'white' }
                         icon={faHeart}
                         style={{ marginBottom: "10px" }}
                         fontSize={"30px"}
@@ -550,4 +549,4 @@ const GigsTest = ({inProfile}) => {
   );
 };
 
-export default GigsTest;
+export default SelectedUserGigs;

@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { showToastSuccess } from '../../services/toastServices';
 import axios from 'axios';
-import { ListItem, ListItemButton, Typography,Box} from '@mui/material'; // Corrected import
+import { ListItem, ListItemButton,Container, Typography,Box} from '@mui/material'; // Corrected import
+import HamsterLoading from '../../components/HamsterLoading';
 
 
 const Notifications = () => {
@@ -49,7 +50,17 @@ const Notifications = () => {
           </ListItemButton>
         ))
       ) : (
-        <Typography variant='body1'>No notifications found</Typography>
+        <>
+        <Container>
+<Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+<div>
+<HamsterLoading/>
+      <Typography variant="h5">No new notifications</Typography>
+</div>
+</Box>
+</Container>;
+      
+      </>
       )}
     </div>
   );

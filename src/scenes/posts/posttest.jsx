@@ -166,7 +166,7 @@ const GigsTest = () => {
         <Grid item xs={12} md={'6'} >
           {/* Video Player with Hover Icons */}
           <Box onClick={togglePlay}  sx={{ position: 'relative' }}>
-            <div style={{ borderRadius: '30px', overflow: 'hidden' }}>
+            <div style={{ borderRadius: '30px' }}>
               <ReactPlayer volume={0} ref={playerRef} url='https://res.cloudinary.com/dkxyzzuss/video/upload/v1714108165/posts/un4hmh27v7a3i08e9js5.mp4' height='80vh' width='100%' playing={play} loop={true} />
             </div>
          

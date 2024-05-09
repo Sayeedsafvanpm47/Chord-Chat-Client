@@ -2,6 +2,7 @@ import { Avatar, Divider, Input, useTheme } from "@mui/material";
 import {
   faAdd,
   faComment,
+  faEdit,
   faFlag,
   faHeart,
   faReply,
@@ -27,42 +28,37 @@ import { showToastError, showToastSuccess } from "../../services/toastServices";
 import { useSelector } from "react-redux";
 import { WhatsappShareButton } from "react-share";
 import { useSocket } from "../../utils/SocketContext";
+import TextAnimate2 from "../../components/TextAnimate2";
 
-const UserGigs = ({inUserProfile}) => {
+const UserGigs = ({numberOfGigs}) => {
   const playerRef = useRef();
   const [play, setPlay] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [comments, setComments] = useState(false);
+  const [editPost, setEditPost] = useState(false);
   const [posting, setPosting] = useState(false);
   const [post, setPost] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [total, setTotal] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [likedPostInfo,setLikedPostInfo] = useState([])
-  const [userComment, setUserComment] = useState("");
+  const [postId,setPostId] = useState('')
   const {userDetails} = useSelector(state => state.userSelect)
  const [userProfile,setUserProfile] = useState(false)
-
+ 
+ 
   
  const socket = useSocket()
   const fetchUserData = async (page) => {
     try {
       setLoading(true);
       let response 
-       if(inUserProfile)
-        {
+    
           response = await axios.get(
             `http://localhost:3004/api/post-service/get-user-posts/${page}`,
             { withCredentials: true })
-        }else
-        {
-          const selectedUserId = userDetails._id 
-          response = await axios.get(
-            `http://localhost:3004/api/post-service/get-user-posts/${page}/${selectedUserId}`,
-            { withCredentials: true })
-        }
+       
+          
+       
        
       
       if (page >= total) setHasMore(false);
@@ -71,6 +67,7 @@ const UserGigs = ({inUserProfile}) => {
       console.log(response.data)
       setTotal(response.data.totalCount);
       setPost(response.data.posts);
+      numberOfGigs(response.data.totalCount)
 
       setLoading(false);
 
@@ -80,32 +77,20 @@ const UserGigs = ({inUserProfile}) => {
       setLoading(false);
     }
   };
-   const fetchLikedPosts = async ()=>{
-    try {
-      const response = await axios.get('http://localhost:3002/api/user-service/get-liked-posts',{withCredentials:true})
-      if(response)
-        {
-          
-         setLikedPostInfo(response.data.likedPosts)
-        }
-    } catch (error) {
-      
-    }
-   }
+
+   
+
+
 
   useEffect(() => {
     
       fetchUserData(page)
     
-    fetchLikedPosts()
+ 
     
   }, []);
  
-    
-      useEffect(()=>{
-        fetchLikedPosts()
-      },[likedPostInfo])
-    
+
     
 
   const fetchNext = async () => {
@@ -117,37 +102,31 @@ const UserGigs = ({inUserProfile}) => {
     fetchUserData(nextPage);
   };
 
-  const flagPost = async (id) => {
-    try {
-      const response = await axios.post(`http://localhost:3004/api/post-service/flag-post/${id}`,{},{withCredentials:true})
-      showToastSuccess(response.data.message)
-    } catch (error) {}
-  };
+ 
 
-  const likePost = async (id) => {
-    try {
-      console.log(id, "id");
-      const response = await axios.get(
-        `http://localhost:3004/api/post-service/toggle-like-post/${id}`,
-        { withCredentials: true }
-      );
-
-      if (response.data.isLiked) {
-        if(socket.current){
-          socket.current.emit('show-like','liked')
-        }
-        setLiked(true);
-      } else {
-        setLiked(false);
+  const editGig = async (postId)=>{
+  try {
+    setShowModal(true);
+    setPostId(postId)
+    setEditPost(true);
+    console.log("edit post");
+    
+  } catch (error) {
+    
+  }
+  }
+  const deletePost = async (postId)=>{
+   try {
+    const response = await axios.delete(`http://localhost:3004/api/post-service/delete-post/${postId}`,{withCredentials:true})
+    if(response)
+      {
+        showToastSuccess(response.data.message)
+        await fetchUserData()
       }
-
-      showToastSuccess(response.data.message);
-    } catch (error) {
-      console.log(error);
-      showToastError("Error occured");
-    }
-  };
-
+   } catch (error) {
+    
+   }
+  }
   const fetchPrev = async () => {
     if (page > 1) {
       const prevPage = page - 1; // Decrement page
@@ -158,11 +137,7 @@ const UserGigs = ({inUserProfile}) => {
   const togglePlay = async () => {
     setPlay(!play);
   };
-  const openComments = async () => {
-    setShowModal(true);
-    setComments(true);
-    console.log("comments");
-  };
+
   const schema = Yup.object().shape({
     description: Yup.string().required("Description is required"),
     title: Yup.string().required("Title is required"),
@@ -194,68 +169,39 @@ const UserGigs = ({inUserProfile}) => {
       console.log(response);
     } catch (error) {
     } finally {
+      
       setPosting(false);
+      await fetchUserData()
     }
   };
-  const sharePost = async (id) => {
+ 
+  const editPostDetails = async (e)=>{
     try {
-      const response = await axios.get(
-        `http://localhost:3004/api/post-service/share-post/${id}`,
+      e.preventDefault()
+     
+      const description = document.getElementById('description-edit').value
+      const title = document.getElementById('title-edit').value 
+      let formData = {
+        description,title 
+      }
+      console.log(title,'title')
+     
+      setEditPost(true);
+      const response = await axios.patch(
+        `http://localhost:3004/api/post-service/edit-post/${postId}`,
+        formData,
         { withCredentials: true }
       );
       console.log(response);
-      const link = await response.data;
-
-      const modalWidth = 600;
-      const modalHeight = 400;
-      const left = (window.innerWidth - modalWidth) / 2;
-      const top = (window.innerHeight - modalHeight) / 2;
-      const modalOptions = `width=${modalWidth},height=${modalHeight},top=${top},left=${left},toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no`;
-      window.open(link, "_blank", modalOptions);
-    } catch (error) {}
-  };
-  const addComment = async (id) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:3004/api/post-service/add-comment/${id}`,
-        { comment: userComment },
-        { withCredentials: true }
-      );
-
-      // Handle successful comment addition
-      console.log("Comment added successfully:", response.data); // Log response for debugging purposes (remove in production)
-      fetchData(page);
-      // Update UI to reflect the new comment (implementation depends on your UI framework)
     } catch (error) {
-      console.error("Error adding comment:", error);
-      // Handle errors appropriately, e.g., display an error message to the user
+      console.log(error)
+    } finally {
+     setEditPost(false)
+      await fetchUserData()
     }
-  };
+  }
 
-  const setComment = async (value) => {
-    try {
-      setUserComment(value);
-    } catch (error) {}
-  };
-
-  const deleteComment = async (id, commentId) => {
-    try {
-      // const response = await axios.get(`http://localhost:3004/api/post-service/delete-cmnt/${id}/${commentId}`, {
-      //   withCredentials: true
-      // });
-      // console.log(response);
-      // fetchData(page);
-      console.log("Comment for deletion");
-      const response = await axios.delete(
-        `http://localhost:3004/api/post-service/delete-comment/${id}/${commentId}`,
-        { withCredentials: true }
-      );
-      console.log(response);
-      fetchData(page);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+   
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -282,12 +228,12 @@ const UserGigs = ({inUserProfile}) => {
                 {/* Video Player with Hover Icons */}
 
                 <Box onClick={togglePlay} sx={{ position: "relative" }}>
-                  <Box style={{ borderRadius: "30px" }}>
+                <Box style={{ borderRadius: "20px", background: theme.palette.mode == 'dark' ? "linear-gradient(180deg, #323232 0%, #000000 100%)" : "linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%)" }}>
                     <ReactPlayer
                       volume={1}
                       ref={playerRef}
                       url={postItem.video}
-                      height="80vh"
+                      height="75vh"
                       width="100%"
                       playing={play}
                       loop={true}
@@ -319,34 +265,20 @@ const UserGigs = ({inUserProfile}) => {
                       }}
                     >
                       <FontAwesomeIcon
-                        onClick={() => likePost(postItem._id)}
-                        color={inProfile ? 'white' : likedPostInfo.find(item => item == postItem._id) ? 'red' : 'white' }
-                        icon={faHeart}
+                        onClick={()=>editGig(postItem._id)}
+                        color={  'white' }
+                        icon={faEdit}
                         style={{ marginBottom: "10px" }}
                         fontSize={"30px"}
                       />
                       <FontAwesomeIcon
-                        onClick={openComments}
+                        onClick={()=>deletePost(postItem._id)}
                         color="white"
-                        icon={faComment}
+                        icon={faTrash}
                         style={{ marginBottom: "10px" }}
                         fontSize={"30px"}
                       />
-                      {/* <FontAwesomeIcon
-                        color="white"
-                        icon={faShare}
-                        onClick={() => sharePost(postItem._id)}
-                        style={{ marginBottom: "10px" }}
-                        fontSize={"30px"}
-                      />
-                       */}
-                      <FontAwesomeIcon
-                        color="white"
-                        icon={faFlag}
-                        onClick={() => flagPost(postItem._id)}
-                        style={{ marginBottom: "10px" }}
-                        fontSize={"30px"}
-                      />
+                      
                     </div>
                   </Box>
                 </Box>
@@ -355,69 +287,85 @@ const UserGigs = ({inUserProfile}) => {
               <Grid item xs={12} md={"3"}>
                 {/* Text Content */}
                 <ModalThemed
-                  height={!comments ? "80%" : null}
-                  width={!comments ? "50%" : null}
                   isOpen={showModal}
                   handleClose={() => setShowModal(false)}
                 >
-                  {comments ? (
-                    <Container>
-                      <Typography variant="h4">Comments</Typography>
-                      <Box>
-                        <InputComponent
-                          handleClick={() => addComment(postItem._id)}
-                          handleInput={setComment}
-                          inputplaceholder={"Add a comment"}
-                          button={<FontAwesomeIcon icon={faAdd} />}
-                        />
-                      </Box>
+                  {editPost ? (
+                <Container sx={{ marginTop: "5%" }}>
+                {posting && (
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: 0,
+                      left: 0,
+                      width: "50vw",
+                      height: "100vh",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)", // Semi-transparent overlay
+                      zIndex: 999, // High z-index for stacking
+                    }}
+                  >
+                    <PostLoading />
+                  </div>
+                )}
+                <Components.Form
+                  onSubmit={editPostDetails}
+                  style={{
+                    backgroundColor:
+                      theme.palette.mode == "dark" ? "#333333" : "white",
+                  }}
+                >
+                  <Components.ParagraphModal>
+                    Edit your gig!👨‍🎤 🎸
+                  </Components.ParagraphModal>
 
-                      {postItem.comments &&
-                        postItem.comments.length > 0 &&
-                        postItem.comments.map((comment, index) => (
-                          <div key={index}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                margin: "10px 10px 10px 10px",
-                              }}
-                            >
-                              <Avatar></Avatar>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  marginLeft: "10px",
-                                  whiteSpace: "pre-wrap",
-                                  flex: 1,
-                                }}
-                              >
-                                <Box sx={{ display: "grid", width: "100%" }}>
-                                  <Typography variant="body1">
-                                    {comment.username}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {comment.comment}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: "flex", gap: "1rem" }}>
-                               
-                                  <span
-                                    onClick={() =>
-                                      deleteComment(
-                                        postItem._id,
-                                        comment.commentId
-                                      )
-                                    }
-                                  >
-                                    <FontAwesomeIcon icon={faTrash} />
-                                  </span>
-                                </Box>
-                              </Box>
-                            </Box>
-                            <Divider />
-                          </div>
-                        ))}
-                    </Container>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {" "}
+                   
+                  </div>
+                  <Tooltip title="Enter Title">
+                    <Components.Input
+                      type="text"
+                      id="title-edit"
+                     
+                      placeholder={postItem.title}
+                     
+                    />
+                  </Tooltip>
+
+                 
+                  <Tooltip title="Enter the description">
+                    <Components.Input
+                      type="text"
+                      id="description-edit"
+                      placeholder={postItem.description}
+                    
+                    />
+                  </Tooltip>
+                
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: "2%",
+                    }}
+                  >
+                    <Components.Button type="submit">
+                      {posting ? "Editing gig..." : "Edit gig"}
+                    </Components.Button>
+                  </div>
+                </Components.Form>
+              </Container>
                   ) : (
                     <Container sx={{ marginTop: "5%" }}>
                       {posting && (
@@ -533,7 +481,7 @@ const UserGigs = ({inUserProfile}) => {
         )}
         <span
           onClick={() => {
-            setComments(false);
+            
             setShowModal(true);
           }}
         >
