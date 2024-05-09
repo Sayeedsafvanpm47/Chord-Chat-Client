@@ -28,7 +28,7 @@ import { useSelector } from "react-redux";
 import { WhatsappShareButton } from "react-share";
 import { useSocket } from "../../utils/SocketContext";
 
-const GigsTest = ({inProfile}) => {
+const UserGigs = ({inUserProfile}) => {
   const playerRef = useRef();
   const [play, setPlay] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -42,17 +42,29 @@ const GigsTest = ({inProfile}) => {
   const [liked, setLiked] = useState(false);
   const [likedPostInfo,setLikedPostInfo] = useState([])
   const [userComment, setUserComment] = useState("");
-  const { userInfo } = useSelector((state) => state.auth);
+  const {userDetails} = useSelector(state => state.userSelect)
  const [userProfile,setUserProfile] = useState(false)
 
-  const fetchData = async (page) => {
+  
+ const socket = useSocket()
+  const fetchUserData = async (page) => {
     try {
       setLoading(true);
       let response 
-      response = await axios.get(
-        `http://localhost:3004/api/post-service/get-all-posts/${page}`,
-        { withCredentials: true }
-      )
+       if(inUserProfile)
+        {
+          response = await axios.get(
+            `http://localhost:3004/api/post-service/get-user-posts/${page}`,
+            { withCredentials: true })
+        }else
+        {
+          const selectedUserId = userDetails._id 
+          response = await axios.get(
+            `http://localhost:3004/api/post-service/get-user-posts/${page}/${selectedUserId}`,
+            { withCredentials: true })
+        }
+       
+      
       if (page >= total) setHasMore(false);
       if (page !== total) setHasMore(true);
 
@@ -68,8 +80,6 @@ const GigsTest = ({inProfile}) => {
       setLoading(false);
     }
   };
- const socket = useSocket()
-  
    const fetchLikedPosts = async ()=>{
     try {
       const response = await axios.get('http://localhost:3002/api/user-service/get-liked-posts',{withCredentials:true})
@@ -85,8 +95,8 @@ const GigsTest = ({inProfile}) => {
 
   useEffect(() => {
     
+      fetchUserData(page)
     
-    fetchData(page);
     fetchLikedPosts()
     
   }, []);
@@ -104,7 +114,7 @@ const GigsTest = ({inProfile}) => {
     }
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchData(nextPage);
+    fetchUserData(nextPage);
   };
 
   const flagPost = async (id) => {
@@ -142,7 +152,7 @@ const GigsTest = ({inProfile}) => {
     if (page > 1) {
       const prevPage = page - 1; // Decrement page
       setPage(prevPage); // Update page state
-      fetchData(prevPage); // Fetch data using the updated page value
+      fetchUserData(prevPage); // Fetch data using the updated page value
     }
   };
   const togglePlay = async () => {
@@ -542,4 +552,4 @@ const GigsTest = ({inProfile}) => {
   );
 };
 
-export default GigsTest;
+export default UserGigs;

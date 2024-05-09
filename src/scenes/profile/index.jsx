@@ -33,6 +33,7 @@ import * as Components from "../login/Components";
 import DragNDrop from "../../components/DragNDrop";
 import { useForm } from "react-hook-form";
 import GigsTest from "../posts/test";
+import UserGigs from "../posts/usergig";
 
 const Profile = () => {
   const theme = useTheme();
@@ -78,6 +79,7 @@ const Profile = () => {
     const response = await axios.get(
       `http://localhost:3002/api/user-service/get-idols/${userId}`,{withCredentials:true}
     );
+    console.log(response.data.data,'idols found')
    
     setIdolsFound(response.data.data);
     setModalTitle("Your Idols");
@@ -376,7 +378,7 @@ const Profile = () => {
           Gigs {userInfo.data.gigs ? userInfo.data.gigs.length : 0}{" "}
         </Typography>
       </Box>
-      <GigsTest inProfile={true}/>
+      <UserGigs/>
     </>
   );
 };

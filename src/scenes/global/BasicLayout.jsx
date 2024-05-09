@@ -263,7 +263,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                 >
                   {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faBell}/>} 
                 </ListItemIcon>
-                <ListItemText primary={'Notifications'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} /> <span>{notification}</span>
+                <ListItemText primary={'Notifications'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} /> 
               </ListItemButton>
               <ListItemButton
                 sx={{

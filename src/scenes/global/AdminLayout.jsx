@@ -182,24 +182,7 @@ const navigate = useNavigate()
         <List>
     
             <ListItem key={'text'} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 70,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faGauge}/>} 
-                </ListItemIcon>
-                <ListItemText primary={'Dashboard'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
-              </ListItemButton>
+        
               <ListItemButton
                 sx={{
                   minHeight: 70,
@@ -237,25 +220,7 @@ const navigate = useNavigate()
                 </ListItemIcon>
                 <ListItemText primary={'Gig management'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
-              <ListItemButton
-                sx={{
-                  minHeight: 70,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-                onClick={()=>navigate('/search')}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faBell}/>} 
-                </ListItemIcon>
-                <ListItemText primary={'Notifications Management'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
-              </ListItemButton>
+              
               <ListItemButton
                 sx={{
                   minHeight: 70,

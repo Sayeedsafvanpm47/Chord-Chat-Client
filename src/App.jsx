@@ -77,7 +77,7 @@ const App = () => {
            
             <Route path='/home' element={<Home/>}/>
             <Route path='/dashboard' element={<Dashboard/>}/>
-            <Route path='/profile' element={<Profile/>}/>
+            <Route path='/profile' inUserProfile={true} element={<Profile/>}/>
             <Route path='/search' element={<SearchUsers/>}/>
             <Route path='/userprofile' element={<UserProfile/>}/>
             <Route path='/melodytrade' element={<MarketPlace/>}/>
