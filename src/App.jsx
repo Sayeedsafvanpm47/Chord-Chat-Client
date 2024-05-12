@@ -34,6 +34,7 @@ import { useSocket } from './utils/SocketContext'
 import { showToastSuccess } from './services/toastServices'
 import Notifications from './scenes/notifications'
 import Success from './scenes/order-success'
+import Messenger from './scenes/messenger'
 
 
 
@@ -84,6 +85,7 @@ const App = () => {
             <Route path='/notifications' element={<Notifications/>}/>
             <Route path='/success' element={<Success/>}/>
             <Route path='/profiletest' element={<ProfileTest/>}/>
+            <Route path='/chat' element={<Messenger/>}/>
             {/* <Route path='/test' element={<MarketPlaceTest/>}/> */}
             <Route path='/gigs' element={<Gigs/>}/>
             <Route path='/test' element={<InfiniteScrollComp inProfile={false}/>}/>
