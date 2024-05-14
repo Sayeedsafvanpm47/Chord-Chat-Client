@@ -1,26 +1,36 @@
-import { createContext, useContext, useEffect, useRef,useState } from 'react'
-import { useSelector } from 'react-redux'
-import {io} from 'socket.io-client'
-import { showToastSuccess } from '../services/toastServices'
 
-const SocketContext = createContext()
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import {useSelector} from 'react-redux'
+import { io } from 'socket.io-client';
 
-export const useSocket = ()=> useContext(SocketContext)
-export const SocketProvider = ({children})=>{
+const SocketContext = createContext();
 
-          const socket = useRef(null)
-         
-          const {userInfo} = useSelector(state => state.auth)
-          useEffect(() => {
-                
-                    socket.current = io('ws://localhost:3009');
-                    socket.current.emit('addUser',userInfo.data._id)
-                  
-                  }, []); // Re-run effect when userInfo changes
-                
-                
+export const useSocket = () => useContext(SocketContext);
 
-          return (<SocketContext.Provider value={socket}>
-                    {children}
-          </SocketContext.Provider>)
-}
+export const SocketProvider = ({ children }) => {
+  const socket = useRef(null);
+  const {userInfo} = useSelector((state)=>state.auth)
+
+  useEffect(() => {
+
+ // Initialize socket connection when component mounts
+ socket.current = io('http://localhost:3009');
+ if(userInfo.data){
+  socket.current.emit('addUser', userInfo.data._id)
+ }
+
+ return () => {
+   if (socket.current) {
+     socket.current.disconnect();
+   }
+ };
+
+   
+  }, []);
+
+  return (
+    <SocketContext.Provider value={socket}>
+      {children}
+    </SocketContext.Provider>
+  );
+};

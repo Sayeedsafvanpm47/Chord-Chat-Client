@@ -4,7 +4,7 @@ import {createTheme} from '@mui/material'
 import { themeSettings } from './theme'
 import {useSelector,useDispatch} from 'react-redux'
 import { setMode } from './app/slices/globalSlice'
-import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
+import {BrowserRouter,Routes,Route,Navigate, useNavigate} from 'react-router-dom'
 import Dashboard from './scenes/dashboard/index'
 import Home from './scenes/home'
 import LandingPage from './scenes/landingpage'
@@ -45,17 +45,25 @@ const App = () => {
   const mode = useSelector((state)=>state.global.mode)
   const theme = useMemo(()=>createTheme(themeSettings(mode)),[mode])
   const {userInfo} = useSelector(state => state.auth)
-
+ const navigate = useNavigate()
   const handleModeToggle = () => {
     // Dispatch setMode action to toggle mode
     dispatch(setMode());
   };
+useEffect(()=>{
+if(userInfo&&userInfo.data)
+  {
+    navigate('/profile')
+  }else{
+    navigate('/')
+  }
+},[userInfo?.data])
 
 
   return (
     <div className='app'>
         <ToastContainer></ToastContainer>
-      <BrowserRouter>
+    
       <ThemeProvider theme={theme}>
     
         <CssBaseline />
@@ -102,7 +110,7 @@ const App = () => {
         </Routes>
    
       </ThemeProvider>
-      </BrowserRouter>
+  
     </div>
   );
 };

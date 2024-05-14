@@ -6,7 +6,7 @@ import { useSocket } from '../utils/SocketContext'
 
 const Message = ({messages,ownmessage}) => {
   console.log(ownmessage,'own message')
-  const socket = useSocket()
+  // const socket = useSocket()
 
   return (
           <div>

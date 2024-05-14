@@ -119,7 +119,16 @@ export default function BasicLayout() {
 const navigate = useNavigate()
 const userAuth = useAuth()
 const [notification,setNotification] = React.useState(0)
-if(!userAuth) return <Navigate to="/" replace />;
+// if(!userAuth) return <Navigate to="/" replace />;
+React.useEffect(()=>{
+if(userAuth)
+  {
+    navigate('/profile')
+  }else
+  {
+    navigate('/')
+  }
+},[])
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -234,6 +243,7 @@ if(!userAuth) return <Navigate to="/" replace />;
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/chat')}
               >
                 <ListItemIcon
                   sx={{

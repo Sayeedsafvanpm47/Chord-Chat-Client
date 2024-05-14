@@ -1,7 +1,7 @@
 import React,{useCallback, useEffect, useRef, useState} from "react";
 import "../../assets/css/messenger.css";
 import SearchBar from "../../components/SearchBar";
-import { Avatar, Box, Container, Typography, useMediaQuery } from "@mui/material";
+import { Container, Typography, useMediaQuery } from "@mui/material";
 
 import Conversations from "../../components/Conversations";
 import Message from "../../components/Message";
@@ -14,10 +14,6 @@ import axios from "axios";
 import { useSocket } from "../../utils/SocketContext";
 import { showToastSuccess } from "../../services/toastServices";
 import ModalThemed from "../../components/ModalThemed";
-import { io } from "socket.io-client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faPhone } from "@fortawesome/free-solid-svg-icons";
-
 
 const Messenger = () => {
           const [textareaValue, setTextareaValue] = useState('');
@@ -25,163 +21,131 @@ const Messenger = () => {
           const [currentChat,setCurrentChat] = useState(null)
           const [messages,setMessages] = useState([])
           const [newMessage,setNewMessage] = useState('')
-          const [arrivalMessage,setArrivalMessage] = useState(null)
+          const [arrivalMessage,setArrivalMessage] = useState('')
           const {userInfo} = useSelector(state=>state.auth)
           const [activeConversationId, setActiveConversationId] = useState(null);
           const [showModal,setShowModal] = useState(false)
           const [callDetails,setCallDetails] = useState(null)
-          const [recieved,setReceived] = useState(false)
           const socket = useSocket()
-         useEffect(()=>{
+          
          
-          if(socket.current){ socket.current.on('getMessage',(data)=>{
-            setArrivalMessage({
-              senderId: data.senderId,
-              text: data.text,
-              createdAt: Date.now()
-            });  
-           
-            setReceived(true)
-
-
-         
-            console.log(data,'received message')   
-          })
-          socket.current.on('videoCallAccept',(data)=>{
-
-            setCallDetails({
-              username:data.username,
-              profilePic:data.profilePic,
-              roomId:data.roomId
-            })
-            setShowModal(true)
-          })
-        
-        }
-         },[socket])
-
-         useEffect(()=>{
-           console.log(recieved,'recieved value')
-          console.log(arrivalMessage,'arrival message')
-        
-      arrivalMessage && currentChat?.members.includes(arrivalMessage.senderId) && setMessages(prev=>[...prev,arrivalMessage]) 
-              },[arrivalMessage,currentChat,socket])
-
-
           useEffect(()=>{
-            // socket.current.emit('addUser',userInfo.data._id)
+          if(socket.current)
+            {
+             
+                  socket.current.emit('addUser',userInfo.data._id)
+                
+              socket.current.on('getUsers',users=>{
+                console.log(users,'users from socket')
+               })
                
-          if(socket.current){  socket.current.on('getUsers',users=>{
-              console.log(users,'users from socket')
-             })}
-          },[userInfo.data,socket])
+              
+           
+              socket.current.on('getMessage',data=>{
+                setArrivalMessage({
+                  senderId:data.senderId,
+                  text:data.text,
+                  createdAt:Date.now()
+                })
+               })
+            
+              
+            }
+               
+              
+              
+              
+            
           
-     
-         
-         
-        
+          },[userInfo.data])
+       
 
-        
-      
-      
-    
-          
-         
+     
           useEffect(()=>{
-            const fetchConversation = async ()=>
-              {
-                try {
-                  const res = await axios.get(`http://localhost:3009/api/chat-service/get-conversations/${userInfo.data._id}`,{withCredentials:true})
-                  console.log(res.data.conversation)
-                  setConversation(res.data.conversation)
-                } catch (error) { 
-                  console.log(error)
-                }
-              }
+            
+            console.log(callDetails,'call details')
+            console.log(arrivalMessage,'arrival')
+            console.log(currentChat?.members.includes(arrivalMessage.senderId),'condition')
+            
+            arrivalMessage && currentChat?.members.includes(arrivalMessage.senderId) && setMessages(prev=>[...prev,arrivalMessage]) 
+                    },[arrivalMessage,currentChat])
+
+    
+          const fetchConversation = async ()=>
+          {
+            try {
+              const res = await axios.get(`http://localhost:3009/api/chat-service/get-conversations/${userInfo.data._id}`,{withCredentials:true})
+              console.log(res.data.conversation)
+              setConversation(res.data.conversation)
+            } catch (error) { 
+              console.log(error)
+            }
+          }
+          const getMessages = async ()=>{
+            try {
+               const response = await axios.get(`http://localhost:3009/api/chat-service/get-messages/${currentChat._id}`)
+               console.log(response.data,'messages')
+               setMessages(response.data.messages)
+            } catch (error) {
+               console.log(error)
+            }
+          }
+          useEffect(()=>{
           fetchConversation()
           },[userInfo.data._id])
-         
           useEffect(()=>{
-            const getMessages = async ()=>{
-              try {
-                 const response = await axios.get(`http://localhost:3009/api/chat-service/get-messages/${currentChat._id}`)
-                 console.log(response.data,'messages')
-                 setMessages(response.data.messages)
-              } catch (error) {
-                 console.log(error)
-              }
-            }
             getMessages()
           },[currentChat])
-
-          
-       
           
           const handleChange = (event) => {
             setTextareaValue(event.target.value);
           };
           const scrollRef = useRef()
-          const handleSubmit = async (e) => {
-            const message = {
-              senderId: userInfo.data._id,
-              text: textareaValue,
-              conversationId: currentChat._id
-          
-          }
-          const receiverId = currentChat.members.find(member => member !== userInfo.data._id)
-          
-              socket.current.emit('sendMessage',{senderId:userInfo.data._id,receiverId:receiverId,text:textareaValue})
-            
+          const handleSubmit = useCallback(async (e) => {
             try {
               e.preventDefault();
-           
+              const message = {
+                senderId: userInfo.data._id,
+                text: textareaValue,
+                conversationId: currentChat._id
+            
+            }
              
-             
+              const receiverId = currentChat.members.find(member => member !== userInfo.data._id)
              
               const sendMessage = await axios.post('http://localhost:3009/api/chat-service/set-message', message, { withCredentials: true });
               console.log(sendMessage.data);
               setTextareaValue('')
         
-             
+               if(socket.current)
+                {
+                  socket.current.emit('sendMessage',{senderId:userInfo.data._id,receiverId:receiverId,text:textareaValue})
+                }
                  
               setMessages(prevMessages => [...prevMessages, sendMessage.data.message]);
             } catch (error) {
               console.log(error);
             }
-          }
+          }, [currentChat, textareaValue, userInfo.data._id]);
       
           const autoResize = (event) => {
               const textarea = event.target;
               textarea.style.height = 'auto';
               textarea.style.height = (textarea.scrollHeight) + 'px';
           };
-         
-
-         
-
+       
           useEffect(() => {
             scrollRef?.current?.scrollIntoView({ behavior: 'smooth' });
           }, [messages]);
   
           
           const isMobile = useMediaQuery("(max-width:600px)");
-  
+          console.log(currentChat,'curr')
   return (
     <>
-   <ModalThemed height={'50%'} isOpen={showModal} handleClose={() => setShowModal(false)}>
+   <ModalThemed isOpen={showModal} handleClose={() => setShowModal(false)}>
       <Container>
-      <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
-      <Avatar sx={{height:'100px',width:'100px'}} src={callDetails?.profilePic}></Avatar>
-        </Box>
-        <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
-         
-        <Typography variant="h4">{callDetails?.username} Calling...</Typography>
-        </Box>
-        <Box sx={{display:'flex',justifyContent:'space-between',marginTop:'5%',marginLeft:'30%',marginRight:'30%'}}>
-        <FontAwesomeIcon style={{fontSize:'60px',color:'red'}} icon={faCancel}></FontAwesomeIcon>
-        <FontAwesomeIcon style={{fontSize:'60px',color:'green'}} icon={faPhone}></FontAwesomeIcon>
-        </Box>
-       
+        {callDetails?.username}
       </Container>
     </ModalThemed>
     <div className="messenger">

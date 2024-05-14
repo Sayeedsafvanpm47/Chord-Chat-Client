@@ -7,6 +7,7 @@ import store from './app/store.js'
 
 import {Provider} from 'react-redux'
 import { SocketProvider } from './utils/SocketContext.jsx'
+import { BrowserRouter } from 'react-router-dom'
 
 
 
@@ -18,7 +19,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
   
 <SocketProvider>
+<BrowserRouter>
     <App />
+    </BrowserRouter>
     </SocketProvider>
   
  

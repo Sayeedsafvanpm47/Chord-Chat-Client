@@ -1,5 +1,5 @@
 import { Container, Grid } from "@mui/material";
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import FlexBetween from "../../components/FlexBetween";
 import Logo from "../../components/Logo";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
@@ -17,14 +17,20 @@ const LandingLayout = () => {
   const navigate = useNavigate()
   const userAuth = useAuth()
   const isAdmin = adminAuth()
-  if(userAuth)
-  {
-    if(isAdmin)
-    {
-      return <Navigate to='/admin-market' replace/>
-    }
-    return <Navigate to='/home' replace/>
-  }
+   useEffect(()=>{
+    if(userAuth)
+      {if(isAdmin)
+        {
+          navigate('/profile')
+        }
+        navigate('/profile')
+    
+      }else
+      {
+        navigate('/')        
+      }
+
+   },[])
 
   return (
         <>
