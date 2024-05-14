@@ -19,18 +19,21 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { DarkModeOutlined,LightModeOutlined, NoEncryption } from '@mui/icons-material';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "../../app/slices/globalSlice";
 import Logo from '../../components/Logo'
 import FlexBetween from '../../components/FlexBetween';
 import { Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../app/hooks/userAuthRedirectionHook';
 import {Navigate} from 'react-router-dom'
-import {faGuitar,faMessage,faBell,faSearch,faTicket,faShop,faUser,faMusic} from '@fortawesome/free-solid-svg-icons'
+import {faGuitar,faMessage,faBell,faSearch,faTicket,faShop,faUser,faMusic, faCancel, faPhone} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { viewProfile } from '../../services/sidebarNavigation';
 import { useSocket } from '../../utils/SocketContext';
 import { showToastSuccess } from '../../services/toastServices';
+import { useState } from 'react';
+import ModalThemed from '../../components/ModalThemed';
+import { Avatar, Container } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -115,10 +118,16 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function BasicLayout() {
-  const socket = useSocket()
+
 const navigate = useNavigate()
 const userAuth = useAuth()
 const [notification,setNotification] = React.useState(0)
+const [callDetails,setCallDetails] = React.useState(null)
+const [showModal,setShowModal] = React.useState(false)      
+const [recieved,setReceived] = React.useState(false)
+const [roomNumber,setRoomNumber] = React.useState('')
+const {userInfo} = useSelector(state=>state.auth)
+const socket = useSocket()
 // if(!userAuth) return <Navigate to="/" replace />;
 React.useEffect(()=>{
 if(userAuth)
@@ -129,6 +138,24 @@ if(userAuth)
     navigate('/')
   }
 },[])
+React.useEffect(()=>{
+  if(socket.current)
+    {
+      socket.current.on('videoCallAccept',(data)=>{
+
+        setCallDetails({
+          username:data.username,
+          profilePic:data.profilePic,
+          roomId:data.roomId
+        })
+      
+        setShowModal(true)
+      })
+    }
+},[userInfo?.data,socket])
+const acceptCall = async ()=>{
+ 
+}
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -168,6 +195,24 @@ if(userAuth)
    
  }, [socket.current]);
   return (
+    <>
+    
+    <ModalThemed height={'50%'} isOpen={showModal} handleClose={() => setShowModal(false)}>
+      <Container>
+      <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
+      <Avatar sx={{height:'100px',width:'100px'}} src={callDetails?.profilePic}></Avatar>
+        </Box>
+        <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
+         
+        <Typography variant="h4">{callDetails?.username} Calling...</Typography>
+        </Box>
+        <Box sx={{display:'flex',justifyContent:'space-between',marginTop:'5%',marginLeft:'30%',marginRight:'30%'}}>
+        <FontAwesomeIcon style={{fontSize:'60px',color:'red'}} icon={faCancel}></FontAwesomeIcon>
+        <FontAwesomeIcon onClick={acceptCall} style={{fontSize:'60px',color:'green'}} icon={faPhone}></FontAwesomeIcon>
+        </Box>
+       
+      </Container>
+    </ModalThemed>
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open} >
@@ -364,7 +409,6 @@ if(userAuth)
        
 
 
-
   <Outlet/> 
  
   
@@ -375,5 +419,6 @@ if(userAuth)
       </Box>
     
     </Box>
+    </>
   );
 }

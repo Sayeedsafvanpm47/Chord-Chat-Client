@@ -33,6 +33,8 @@ import {
   faShoppingCart,
   faPlus,
   faMinus,
+  faCancel,
+  faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../../components/SearchBar";
 import axios from "axios";
@@ -61,6 +63,7 @@ import PaginationComponent from "../../components/Pagination";
 import Pagination2 from "../../components/Pagination2";
 import { loadStripe } from "@stripe/stripe-js";
 import HamsterLoading from "../../components/HamsterLoading";
+import { setTicketSuccess } from "../../app/slices/ticketSlice";
 
 
 const Tickets = () => {
@@ -80,6 +83,7 @@ const Tickets = () => {
   const [buyTickets,setBuyTickets] = useState(null)
   const [itemQuantities, setItemQuantities] = useState({});
   const [userTickets,setUserTickets] = useState(null)
+
 
   const fetchTickets = async (page) => {
     try {
@@ -229,7 +233,8 @@ const Tickets = () => {
              amount : ${item.totalAmount}
              
             </ListItem>
-           {item.status == 'Cancelled' ? (<span><Typography style={{color:'red'}} variant="h6">Cancelled</Typography></span>) : ( <span onClick={()=>cancelOrder(item._id)}><ButtonHover text={'Cancel'}></ButtonHover></span>) }
+           {item.status == 'Cancelled' ? (<span style={{}}><Typography style={{color:'red'}} variant="h6">Cancelled</Typography></span>) : (<span><FontAwesomeIcon color="red" fontSize={'40px'} onClick={()=>cancelOrder(item._id)} icon={faCancel}></FontAwesomeIcon>  </span>) } 
+          {!(item.status == 'Cancelled') && <FontAwesomeIcon onClick={()=>{dispatch(setTicketSuccess({title:item.title,description:item.description,quantity:item.quantity,amount:item.totalAmount,image:item.image}));navigate('/ticket-pdf')}} fontSize={'40px'} color="white" style={{marginLeft:'20px'}} icon={faEye}></FontAwesomeIcon> }
           </ListItemButton>
         )}</div>)}
         </Container>

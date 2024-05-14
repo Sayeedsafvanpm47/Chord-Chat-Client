@@ -35,6 +35,8 @@ import { showToastSuccess } from './services/toastServices'
 import Notifications from './scenes/notifications'
 import Success from './scenes/order-success'
 import Messenger from './scenes/messenger'
+import VideoCall from './components/VideoCall'
+import TicketPrint from './components/TicketPrint'
 
 
 
@@ -68,6 +70,7 @@ if(userInfo&&userInfo.data)
     
         <CssBaseline />
         <Routes>
+          <Route path='ticket-pdf' element={<TicketPrint/>}/>
         {/* <Route path='/' element={<LandingPage/>}/> */}
        {userInfo == null && <Route element={<LandingLayout/>}>
           <Route path='/' element={<LandingPage/>}/>
@@ -80,8 +83,9 @@ if(userInfo&&userInfo.data)
             <Route path='/admin-market' element={<AdminMarket/>}/>
             <Route path='/admin-users' element={<UsersInfo/>}/>
            <Route path='/ticket-counter' element={<AdminTickets/>}/>
+         
           </Route>}
-        {!userInfo?.data?.isAdmin && <Route element={<BasicLayout/>}>
+        {userInfo?.data && <Route element={<BasicLayout/>}>
             {/* <Route path='/' element={<Navigate to="/home" replace/> }/> */}
            
             <Route path='/home' element={<Home/>}/>
@@ -94,6 +98,7 @@ if(userInfo&&userInfo.data)
             <Route path='/success' element={<Success/>}/>
             <Route path='/profiletest' element={<ProfileTest/>}/>
             <Route path='/chat' element={<Messenger/>}/>
+            <Route path='/room/:roomId' element={<VideoCall/>}/>
             {/* <Route path='/test' element={<MarketPlaceTest/>}/> */}
             <Route path='/gigs' element={<Gigs/>}/>
             <Route path='/test' element={<InfiniteScrollComp inProfile={false}/>}/>

@@ -15,9 +15,7 @@ export const SocketProvider = ({ children }) => {
 
  // Initialize socket connection when component mounts
  socket.current = io('http://localhost:3009');
- if(userInfo.data){
-  socket.current.emit('addUser', userInfo.data._id)
- }
+
 
  return () => {
    if (socket.current) {

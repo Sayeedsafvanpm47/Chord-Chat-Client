@@ -7,10 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVideo } from "@fortawesome/free-solid-svg-icons";
 import { useSocket } from "../utils/SocketContext";
 import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 const Conversations = ({ conversation }) => {
   const [user, setUser] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate()
   const getUser = async () => {
     try {
       const friendId = conversation?.members.find(
@@ -27,7 +29,7 @@ const Conversations = ({ conversation }) => {
 
   const socket = useSocket();
   const handleVideoCall = (receiverId) => {
-    const randomNumber = uuidv4();
+    const randomNumber = uuidv4().slice(0,5);
     console.log(randomNumber);
     console.log('video call initiated')
     if (socket.current) {
@@ -39,6 +41,7 @@ const Conversations = ({ conversation }) => {
         receiverId:receiverId
 
       });
+      navigate(`/room/${randomNumber}`)
 
     }
   };

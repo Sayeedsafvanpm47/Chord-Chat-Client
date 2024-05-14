@@ -2,6 +2,7 @@ import React,{useCallback, useEffect, useRef, useState} from "react";
 import "../../assets/css/messenger.css";
 import SearchBar from "../../components/SearchBar";
 import { Avatar, Box, Container, Typography, useMediaQuery } from "@mui/material";
+import {v4 as uuidv4} from 'uuid'
 
 import Conversations from "../../components/Conversations";
 import Message from "../../components/Message";
@@ -16,7 +17,8 @@ import { showToastSuccess } from "../../services/toastServices";
 import ModalThemed from "../../components/ModalThemed";
 import { io } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faCancel, faPhone, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 
 const Messenger = () => {
@@ -24,13 +26,12 @@ const Messenger = () => {
           const [conversation,setConversation] = useState([])
           const [currentChat,setCurrentChat] = useState(null)
           const [messages,setMessages] = useState([])
+          const navigate = useNavigate()
           const [newMessage,setNewMessage] = useState('')
           const [arrivalMessage,setArrivalMessage] = useState(null)
           const {userInfo} = useSelector(state=>state.auth)
           const [activeConversationId, setActiveConversationId] = useState(null);
-          const [showModal,setShowModal] = useState(false)
-          const [callDetails,setCallDetails] = useState(null)
-          const [recieved,setReceived] = useState(false)
+        
           const socket = useSocket()
          useEffect(()=>{
          
@@ -41,27 +42,15 @@ const Messenger = () => {
               createdAt: Date.now()
             });  
            
-            setReceived(true)
-
-
+           
+          })
          
-            console.log(data,'received message')   
-          })
-          socket.current.on('videoCallAccept',(data)=>{
-
-            setCallDetails({
-              username:data.username,
-              profilePic:data.profilePic,
-              roomId:data.roomId
-            })
-            setShowModal(true)
-          })
         
         }
          },[socket])
 
          useEffect(()=>{
-           console.log(recieved,'recieved value')
+        
           console.log(arrivalMessage,'arrival message')
         
       arrivalMessage && currentChat?.members.includes(arrivalMessage.senderId) && setMessages(prev=>[...prev,arrivalMessage]) 
@@ -71,7 +60,12 @@ const Messenger = () => {
           useEffect(()=>{
             // socket.current.emit('addUser',userInfo.data._id)
                
-          if(socket.current){  socket.current.on('getUsers',users=>{
+          if(socket.current){
+            if(userInfo?.data){
+              socket.current.emit('addUser', userInfo.data._id)
+             }  
+            
+            socket.current.on('getUsers',users=>{
               console.log(users,'users from socket')
              })}
           },[userInfo.data,socket])
@@ -114,6 +108,18 @@ const Messenger = () => {
             getMessages()
           },[currentChat])
 
+
+          const handleVideoCall = ()=>
+          {
+            const roomId = uuidv4().slice(0,5)
+            const receiverId = currentChat.members.find(member => member !== userInfo.data._id)
+            socket.current.emit('videoCallInitiated',{  userId: userInfo.data._id,
+              profilePic: userInfo.data.image,
+              username: userInfo.data.username,
+              roomId: roomId,
+              receiverId:receiverId})
+              navigate(`/room/:${roomId}`)
+          }
           
        
           
@@ -168,22 +174,7 @@ const Messenger = () => {
   
   return (
     <>
-   <ModalThemed height={'50%'} isOpen={showModal} handleClose={() => setShowModal(false)}>
-      <Container>
-      <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
-      <Avatar sx={{height:'100px',width:'100px'}} src={callDetails?.profilePic}></Avatar>
-        </Box>
-        <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
-         
-        <Typography variant="h4">{callDetails?.username} Calling...</Typography>
-        </Box>
-        <Box sx={{display:'flex',justifyContent:'space-between',marginTop:'5%',marginLeft:'30%',marginRight:'30%'}}>
-        <FontAwesomeIcon style={{fontSize:'60px',color:'red'}} icon={faCancel}></FontAwesomeIcon>
-        <FontAwesomeIcon style={{fontSize:'60px',color:'green'}} icon={faPhone}></FontAwesomeIcon>
-        </Box>
-       
-      </Container>
-    </ModalThemed>
+  
     <div className="messenger">
     
       <div className="chatMenu" style={{flex:isMobile?'1':''}}>
@@ -203,7 +194,7 @@ const Messenger = () => {
     
         <div className="chatBoxWrapper">
         <div className="boxTitle">
-        <Typography variant="h5">Messages</Typography>
+        <Typography variant="h5">Messages <FontAwesomeIcon onClick={handleVideoCall} icon={faVideo}></FontAwesomeIcon></Typography>
         
       
        
