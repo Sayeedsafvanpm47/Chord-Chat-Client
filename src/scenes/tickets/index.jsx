@@ -35,6 +35,7 @@ import {
   faMinus,
   faCancel,
   faDownload,
+  faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "../../components/SearchBar";
 import axios from "axios";
@@ -43,7 +44,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserDetails } from "../../app/slices/userProfileSlice";
 import { showToastError, showToastSuccess } from "../../services/toastServices";
-import { setCredentials } from "../../app/slices/authSlice";
+import { setCredentials, updateWallet } from "../../app/slices/authSlice";
 import {
   fetchMarket,
   setMarketStart,
@@ -79,7 +80,7 @@ const Tickets = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [editTicketDetails, setEditTicketDetails] = useState(null);
   const [editing, setEditing] = useState(false);
-  const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo,wallet } = useSelector((state) => state.auth);
   const [buyTickets,setBuyTickets] = useState(null)
   const [itemQuantities, setItemQuantities] = useState({});
   const [userTickets,setUserTickets] = useState(null)
@@ -99,8 +100,21 @@ const Tickets = () => {
       console.log(error);
     }
   };
+  const fetchWallet = async ()=>{
+    try {
+      const response = await axios.get('http://localhost:3002/api/user-service/get-wallet',{withCredentials:true})
+    
+      showToastSuccess('Wallet balance updated!')
+      dispatch(updateWallet(response.data.wallet));
+      fetchTickets()
+  
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
     fetchTickets(page);
+  
   }, [page]);
 
   const fetchUserTickets = async ()=>{
@@ -122,6 +136,9 @@ const Tickets = () => {
       if(response)
         {
           showToastSuccess(response.data.message)
+          fetchWallet()
+          setShowModal(false)
+    
         }
       
     } catch (error) {
@@ -185,7 +202,19 @@ const Tickets = () => {
           console.log(error)
     }
   };
-
+ const buyWithWallet = async (id)=>{
+  try {
+    console.log(itemQuantities[id],'quantity')
+    const response = await TicketApi.post(`buy-with-wallet/${id}/${itemQuantities[id]?itemQuantities[id]:1}/${wallet}`)
+    console.log(response)
+    fetchWallet()
+    setTimeout(()=>{
+      navigate('/notifications')
+    },2000)
+  } catch (error) {
+    console.log(error)
+  }
+ }
   const viewBoughtTickets = async (id) => {
     await fetchUserTickets()
     setShowModal(true);
@@ -259,6 +288,7 @@ const Tickets = () => {
             <span onClick={viewBoughtTickets}>
               <ButtonHover text={"Your tickets"} />
             </span>
+            <Typography variant="h6">Wallet balance : {wallet}</Typography>
           </Box>
         </Grid>
       </Grid>
@@ -359,6 +389,17 @@ const Tickets = () => {
                               {" "}
                               <FontAwesomeIcon
                                 icon={faShoppingCart}
+                              ></FontAwesomeIcon>
+                            </span>
+                          </Tooltip>
+                          <Tooltip title="Buy With wallet?">
+                            <span
+                              onClick={() => buyWithWallet(item._id)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {" "}
+                              <FontAwesomeIcon
+                                icon={faMoneyBill}
                               ></FontAwesomeIcon>
                             </span>
                           </Tooltip>

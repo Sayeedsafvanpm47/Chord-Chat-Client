@@ -37,6 +37,7 @@ import Success from './scenes/order-success'
 import Messenger from './scenes/messenger'
 import VideoCall from './components/VideoCall'
 import TicketPrint from './components/TicketPrint'
+import HireMusicians from './scenes/hiremusicians'
 
 
 
@@ -98,6 +99,7 @@ if(userInfo&&userInfo.data)
             <Route path='/success' element={<Success/>}/>
             <Route path='/profiletest' element={<ProfileTest/>}/>
             <Route path='/chat' element={<Messenger/>}/>
+            <Route path='/hiremusicians' element={<HireMusicians/>}/>
             <Route path='/room/:roomId' element={<VideoCall/>}/>
             {/* <Route path='/test' element={<MarketPlaceTest/>}/> */}
             <Route path='/gigs' element={<Gigs/>}/>
