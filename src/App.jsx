@@ -38,6 +38,9 @@ import Messenger from './scenes/messenger'
 import VideoCall from './components/VideoCall'
 import TicketPrint from './components/TicketPrint'
 import HireMusicians from './scenes/hiremusicians'
+import AdminOrders from './scenes/admin-orders'
+import AdminJobs from './scenes/admin-jobs'
+import AdminPosts from './scenes/admin-posts'
 
 
 
@@ -84,6 +87,9 @@ if(userInfo&&userInfo.data)
             <Route path='/admin-market' element={<AdminMarket/>}/>
             <Route path='/admin-users' element={<UsersInfo/>}/>
            <Route path='/ticket-counter' element={<AdminTickets/>}/>
+           <Route path='/ticket-orders' element={<AdminOrders/>}/>
+           <Route path='/job-management' element={<AdminJobs/>}/>
+           <Route path='/post-management' element={<AdminPosts/>}/>
          
           </Route>}
         {userInfo?.data && <Route element={<BasicLayout/>}>

@@ -128,14 +128,15 @@ const Messenger = () => {
           };
           const scrollRef = useRef()
           const handleSubmit = async (e) => {
-            const message = {
-              senderId: userInfo.data._id,
-              text: textareaValue,
-              conversationId: currentChat._id
-          
-          }
+       
           const receiverId = currentChat.members.find(member => member !== userInfo.data._id)
-          
+          const message = {
+            senderId: userInfo.data._id,
+            text: textareaValue,
+            conversationId: currentChat._id,
+            receiverId:receiverId
+        
+        }
               socket.current.emit('sendMessage',{senderId:userInfo.data._id,receiverId:receiverId,text:textareaValue})
             
             try {

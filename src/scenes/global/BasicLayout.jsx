@@ -337,7 +337,7 @@ const acceptCall = async ()=>{
                 >
                   {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faSearch}/>} 
                 </ListItemIcon>
-                <ListItemText primary={'Hire Musicians'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+                <ListItemText primary={'Search Musicians'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
               <ListItemButton
                 sx={{

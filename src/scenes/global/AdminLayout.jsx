@@ -208,6 +208,7 @@ const navigate = useNavigate()
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/post-management')}
               >
                 <ListItemIcon
                   sx={{
@@ -220,6 +221,26 @@ const navigate = useNavigate()
                 </ListItemIcon>
                 <ListItemText primary={'Gig management'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
+
+              <ListItemButton
+                sx={{
+                  minHeight: 70,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+                onClick={()=>navigate('/job-management')}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faMusic}/>} 
+                </ListItemIcon>
+                <ListItemText primary={'Job Management'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+              </ListItemButton>
               
               <ListItemButton
                 sx={{
@@ -227,6 +248,7 @@ const navigate = useNavigate()
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={()=>navigate('/ticket-orders')}
               >
                 <ListItemIcon
                   sx={{

@@ -139,6 +139,36 @@ const MarketPlace = () => {
     setShowModal(true)
   }
 
+  const sendMessage = async (userId)=>{
+    try {
+     console.log('clicked send')
+      const response = await axios.get(`http://localhost:3009/api/chat-service/get-conversations/${userId}`,{withCredentials:true})
+      console.log(response.data.conversation[0]._id,'conversation details')
+      // const findConversationId = response.data.conversation.find(item => item.)
+      let message = { 
+        conversationId : response.data.conversation[0]._id,
+        text : `Hey, I saw your ad on medlofy trade, I am interested in buying the product, can we talk about this?`,
+        senderId : userInfo.data._id,
+        type:'enquiry',
+        username:userInfo.data.username,
+        receiverId:userId 
+        
+      }
+      const sentMessage = await axios.post('http://localhost:3009/api/chat-service/set-message',message,{withCredentials:true})
+      console.log(sentMessage,'sent message')
+      if(sentMessage.status==200)
+        {
+          showToastSuccess('Ad enquiry sent successfully!')
+        }else
+        {
+          showToastError('Failed to send enquiry')
+        }
+     
+    } catch (error) {
+      console.log(error)
+    }
+   }
+
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [imageData, setImageData] = useState(null);
@@ -499,7 +529,7 @@ const MarketPlace = () => {
                           {!userAds &&
                             userInfo.data.username !== item.username && (
                               <Tooltip title="Request reply">
-                                <span style={{ cursor: "pointer" }}>
+                                <span onClick={()=>sendMessage(item.user_id)} style={{ cursor: "pointer" }}>
                                   <FontAwesomeIcon
                                     icon={faMessage}
                                   ></FontAwesomeIcon>
@@ -646,7 +676,7 @@ const MarketPlace = () => {
                           {!userAds &&
                             userInfo.data.username !== item.username && (
                               <Tooltip title="Request reply">
-                                <span style={{ cursor: "pointer" }}>
+                                <span onClick={()=>sendMessage(item.user_id)} style={{ cursor: "pointer" }}>
                                   <FontAwesomeIcon
                                     icon={faMessage}
                                   ></FontAwesomeIcon>

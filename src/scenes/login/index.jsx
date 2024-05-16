@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextAnimate2 from "../../components/TextAnimate2";
 import { useSelector, useDispatch } from "react-redux";
-import { setCredentials } from "../../app/slices/authSlice";
+import { setCredentials, updateWallet } from "../../app/slices/authSlice";
 import Modal from "../../components/Modal";
 import { showToastError, showToastSuccess } from "../../services/toastServices";
 import axiosProtect from "../../app/axios/axiosAuth";
@@ -71,8 +71,9 @@ function LoginForm() {
       );
      
 
-      console.log(response.data, "response"); 
+    
       dispatch(setCredentials({ ...response.data }));
+      dispatch(updateWallet(response.data.data.wallet))
       setLoading(false);
    
       navigate('/profile')
