@@ -89,24 +89,39 @@ const UserProfile = () => {
     setFollowing(false);
    }
   }, [userInfo, userDetails?.userDetails?._id]);
-
+ 
   const handleToggleFollow = async () => {
  
+  try {
     const userId = userDetails.userDetails?._id
     const currentUser =  userInfo.data?._id
     const res = await axios.post(`http://localhost:3002/api/user-service/toggle-follow-user/${userId}`,{currentUser},{withCredentials:true})
-    console.log(res)
-    if(res)
-    {
-      showToastSuccess(res.data.message)
-      dispatch(setCredentials({...userInfo,data:res.data.currentUser}))
-      console.log(res.data.followedUser,'target')
-     res.data.followedUser && dispatch(setUserDetailsSuccess({...userDetails,userDetails:res.data.followedUser}))
-      setFollowing(!following);
-    }else
-    {
-      showToastError(res.data.error)
+    console.log(res.data,'response')
+    const body = {
+
+      senderId : currentUser,
+      receiverId : userId 
     }
+    
+    await axios.post('http://localhost:3009/api/chat-service/set-conversation',body,{withCredentials:true})
+      showToastSuccess(res.data.message)
+      res.data.followedUser && dispatch(setUserDetailsSuccess({...userDetails,userDetails:res.data.followedUser}))
+      setFollowing(!following);
+      
+   
+   
+      
+    dispatch(setCredentials({...userInfo,data:res.data.currentUser}))
+
+      
+    
+     
+      console.log(res.data.followedUser,'target')
+ 
+  
+  } catch (error) {
+    console.log(error)
+  }
   }
  
   
@@ -201,7 +216,7 @@ const UserProfile = () => {
   <div onClick={handleToggleFollow}>
     <ButtonHover text={following ? 'Unfollow' : 'Follow Me'} />
   </div>
-  <ButtonHover text={'Text Me'} />
+ 
 </Box>}
   
   <Divider/>

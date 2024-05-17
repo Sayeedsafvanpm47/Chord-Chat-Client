@@ -138,24 +138,7 @@ if(userAuth)
     navigate('/')
   }
 },[])
-React.useEffect(()=>{
-  if(socket.current)
-    {
-      socket.current.on('videoCallAccept',(data)=>{
 
-        setCallDetails({
-          username:data.username,
-          profilePic:data.profilePic,
-          roomId:data.roomId
-        })
-      
-        setShowModal(true)
-      })
-    }
-},[userInfo?.data,socket])
-const acceptCall = async ()=>{
- 
-}
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -197,22 +180,7 @@ const acceptCall = async ()=>{
   return (
     <>
     
-    <ModalThemed height={'50%'} isOpen={showModal} handleClose={() => setShowModal(false)}>
-      <Container>
-      <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
-      <Avatar sx={{height:'100px',width:'100px'}} src={callDetails?.profilePic}></Avatar>
-        </Box>
-        <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
-         
-        <Typography variant="h4">{callDetails?.username} Calling...</Typography>
-        </Box>
-        <Box sx={{display:'flex',justifyContent:'space-between',marginTop:'5%',marginLeft:'30%',marginRight:'30%'}}>
-        <FontAwesomeIcon style={{fontSize:'60px',color:'red'}} icon={faCancel}></FontAwesomeIcon>
-        <FontAwesomeIcon onClick={acceptCall} style={{fontSize:'60px',color:'green'}} icon={faPhone}></FontAwesomeIcon>
-        </Box>
-       
-      </Container>
-    </ModalThemed>
+    
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open} >
