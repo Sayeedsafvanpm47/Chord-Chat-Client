@@ -65,6 +65,7 @@ import Pagination2 from "../../components/Pagination2";
 import { loadStripe } from "@stripe/stripe-js";
 import HamsterLoading from "../../components/HamsterLoading";
 import { setTicketSuccess } from "../../app/slices/ticketSlice";
+import TextAnimate from "../../components/TextAnimate";
 
 
 const Tickets = () => {
@@ -239,6 +240,7 @@ const Tickets = () => {
   </Container>;
   return (
     <>
+    <Typography variant='h4'>Ticket Zone</Typography>
       <ModalThemed
         height={"80%"}
         width={"60%"}
@@ -434,91 +436,111 @@ const Tickets = () => {
             {searchResults.map((item) => (
               <div>
                 <ListItem
-                  key={item._id}
-                  alignItems="flex-start"
-                  sx={{
-                    backgroundColor:
-                      theme.palette.mode == "dark" ? "#111111" : "#f5f5f5",
-                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "10px",
-                    marginBottom: "20px",
-                    transition: "transform 0.2s ease",
-                    "&:hover": {
-                      transform: "translateY(-10px) scale(0.9)",
-                      backgroundColor: "#3a3b3c",
-                    },
-                  }}
-                >
-                  <Box
+                    key={item._id}
+                    alignItems="flex-start"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "20px",
-                      padding: "20px",
+                      backgroundColor:
+                        theme.palette.mode == "dark" ? "#111111" : "#f5f5f5",
+                      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "10px",
+                      marginBottom: "20px",
+                      transition: "transform 0.2s ease",
+                      "&:hover": {
+                        transform: "translateY(-10px) scale(0.9)",
+                        backgroundColor: "#3a3b3c",
+                      },
                     }}
                   >
-                    <div
-                      style={{
-                        width: "200px",
-                        height: "200px",
-                        overflow: "hidden",
-                        borderRadius: "8px",
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "20px",
+                        padding: "20px",
                       }}
                     >
-                      <img
-                        src={item?.image}
-                        alt={item?.description}
+                      <div
                         style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </div>
-                    <Box>
-                      <Typography variant="h2">{item?.title}</Typography>
-                      <Typography variant="h5">{item?.description}</Typography>
-
-                      <Typography variant="h4" sx={{ color: "text.secondary" }}>
-                        Price: $ {item?.price}.00
-                      </Typography>
-                      <Typography variant="body1">Inc Tax.</Typography>
-                      <Typography variant="body1">
-                        Expiring on: {item?.expiringAt}
-                      </Typography>
-                      <Typography variant="body1">Venue:</Typography>
-                      <Typography variant="body1">Dated:</Typography>
-                      <Typography variant="body1">Quantity: {quantity}</Typography>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: "1rem",
-                          fontSize: "3rem",
+                          width: "200px",
+                          height: "200px",
+                          overflow: "hidden",
+                          borderRadius: "8px",
                         }}
                       >
-                        <Tooltip title="Delete Ticket?">
-                          <span
-                            onClick={() => deleteTicket(item?._id)}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {" "}
-                            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                          </span>
-                        </Tooltip>
+                        <img
+                          src={item?.image}
+                          alt={item?.description}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </div>
+                      <Box>
+                        <Typography variant="h2">{item?.title}</Typography>
+                        <Typography variant="h5">
+                          {item?.description}
+                        </Typography>
 
-                        <Tooltip title="Edit Ad?">
-                          <span
-                            onClick={() => editTicket(item._id)}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {" "}
-                            <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
-                          </span>
-                        </Tooltip>
+                        <Typography
+                          variant="h4"
+                          sx={{ color: "text.secondary" }}
+                        >
+                          Price: $ {item?.price}.00
+                        </Typography>
+                        <Typography variant="body1">Inc Tax.</Typography>
+                        <Typography variant="body1">
+                          Expiring on: {item?.expiringAt}
+                        </Typography>
+                        <Typography variant="body1">Venue:</Typography>
+                        <Typography variant="body1">Dated:</Typography>
+                        <Typography variant="body1">Stock:{item.stock}</Typography>
+                      {itemQuantities[item._id] > item.stock ? <Typography variant="body1">Item ran out of stock!</Typography> : <Typography variant="body1">Quantity: {itemQuantities[item._id] || 0}</Typography>}
+
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: "1rem",
+                            fontSize: "3rem",
+                          }}
+                        >
+                          <Tooltip title="Decrease Quantity">
+                <span onClick={() => decreaseQuantity(item._id)}>
+                  <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
+                </span>
+              </Tooltip>
+              <Tooltip title="Increase Quantity">
+                <span onClick={() => increaseQuantity(item._id)}>
+                  <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+                </span>
+              </Tooltip>
+                          <Tooltip title="Buy Ticket?">
+                            <span
+                              onClick={() => buyTicket(item._id)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {" "}
+                              <FontAwesomeIcon
+                                icon={faShoppingCart}
+                              ></FontAwesomeIcon>
+                            </span>
+                          </Tooltip>
+                          <Tooltip title="Buy With wallet?">
+                            <span
+                              onClick={() => buyWithWallet(item._id)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {" "}
+                              <FontAwesomeIcon
+                                icon={faMoneyBill}
+                              ></FontAwesomeIcon>
+                            </span>
+                          </Tooltip>
+                        </Box>
                       </Box>
                     </Box>
-                  </Box>
-                </ListItem>
+                  </ListItem>
               </div>
             ))}
           </List>

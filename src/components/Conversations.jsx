@@ -9,15 +9,19 @@ import { useSocket } from "../utils/SocketContext";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
-const Conversations = ({ conversation }) => {
+const Conversations = ({ conversation,onlineUsers }) => {
   const [user, setUser] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
+  const [online,setOnline] = useState(false)
   const navigate = useNavigate()
   const getUser = async () => {
     try {
       const friendId = conversation?.members.find(
         (member) => member !== userInfo.data._id
       );
+      console.log(onlineUsers,'online ysers')
+     const findUserOnline = onlineUsers.findIndex(item => item.userId==friendId)
+     if(findUserOnline !== -1) setOnline(true)
       const res = await axios(
         `http://localhost:3002/api/user-service/view-user-profile/${friendId}`,
         { withCredentials: true }
@@ -64,9 +68,14 @@ const Conversations = ({ conversation }) => {
           className="conversationImage"
           src={user?.image ? user?.image : ""}
         ></Avatar>
+        <div>
         {!isMobile && <Typography variant="h5"> {user?.username} </Typography>}
+        
+        {online ? 'online' : 'offline'}
+        </div>
+       
       </div>
-      <div onClick={() => handleVideoCall(user?._id)} className="videoCall">
+      <div style={{marginLeft:isMobile?'-30px':''}} onClick={() => handleVideoCall(user?._id)} className="videoCall">
         <Tooltip title="Video call">
           <FontAwesomeIcon icon={faVideo}></FontAwesomeIcon>
         </Tooltip>

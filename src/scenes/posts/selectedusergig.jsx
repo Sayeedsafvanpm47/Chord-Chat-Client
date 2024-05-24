@@ -271,6 +271,8 @@ const SelectedUserGigs = ({numberOfGigs}) => {
                   <Typography variant="h3">{postItem.username}</Typography>
                   <Typography variant="h2">{postItem.title}</Typography>
                   <Typography variant="h6">{postItem.description}</Typography>
+                  <Typography variant="h6">Liked by {postItem.likes.length} musicians</Typography>
+                  <Typography variant="h6">{postItem.comments.length} feedbacks</Typography>
                   {/* Add more text content as needed */}
                 </Box>
               </Grid>
@@ -322,6 +324,7 @@ const SelectedUserGigs = ({numberOfGigs}) => {
                         style={{ marginBottom: "10px" }}
                         fontSize={"30px"}
                       />
+                       <Typography style={{marginLeft:'10px'}}>{postItem.likes.length}</Typography>
                       <FontAwesomeIcon
                         onClick={openComments}
                         color="white"
@@ -329,6 +332,7 @@ const SelectedUserGigs = ({numberOfGigs}) => {
                         style={{ marginBottom: "10px" }}
                         fontSize={"30px"}
                       />
+                       <Typography style={{marginLeft:'10px'}}>{postItem.comments.length}</Typography>
                       {/* <FontAwesomeIcon
                         color="white"
                         icon={faShare}

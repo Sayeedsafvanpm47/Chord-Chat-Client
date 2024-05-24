@@ -54,6 +54,7 @@ import { MarketApi } from "../../api";
 import PaginationComponent from "../../components/Pagination";
 import Pagination2 from "../../components/Pagination2";
 import HamsterLoading from "../../components/HamsterLoading";
+import TextAnimate from "../../components/TextAnimate";
 
 const HireMusicians = () => {
   const navigate = useNavigate();
@@ -199,7 +200,7 @@ let schema
  
 
 
-  const deleteAd = async (id) => {
+  const deleteJob = async (id) => {
     try {
       const response = await axios.patch(`http://localhost:3002/api/user-service/delete-job`,{},{withCredentials:true});
       console.log(response);
@@ -238,6 +239,7 @@ let schema
 
   return (
     <>
+    <Typography variant='h4'>Hire Musicians</Typography>
       <ModalThemed
         height={"80%"}
         width={"60%"}
@@ -437,9 +439,9 @@ let schema
                          
                          
                           { userInfo.data._id == item._id && (
-                            <Tooltip title="Delete Ad?">
+                            <Tooltip title="Delete Job?">
                               <span
-                                onClick={() => deleteAd(item._id)}
+                                onClick={() => deleteJob(item._id)}
                                 style={{ cursor: "pointer" }}
                               >
                                 {" "}
@@ -562,9 +564,9 @@ let schema
                          
                          
                           { userInfo.data._id == item._id && (
-                            <Tooltip title="Delete Ad?">
+                            <Tooltip title="Delete Job?">
                               <span
-                                onClick={() => deleteAd(item._id)}
+                                onClick={() => deleteJob(item._id)}
                                 style={{ cursor: "pointer" }}
                               >
                                 {" "}

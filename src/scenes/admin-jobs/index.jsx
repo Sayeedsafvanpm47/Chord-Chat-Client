@@ -132,7 +132,8 @@ const AdminJobs = () => {
 
   return (
     <>
-     <Typography variant='h1'><TextAnimate textProp={'Job Management'}/></Typography>
+    <Typography variant='h4'>Job Management</Typography>
+    
      
       <Grid container spacing={2}>
         <Grid item xs={12}>
@@ -147,7 +148,7 @@ const AdminJobs = () => {
           >
             <SearchBar
               onSearch={handleSearch}
-              text={"Search for the best deals..."}
+              text={"Search for the jobs..."}
               width={"50%"}
             />
         

@@ -158,6 +158,7 @@ const Profile = () => {
 
   return (
     <>
+      <Typography variant='h4'>{userInfo.data.username}</Typography>
       <ModalThemed height={editProfile && '80%'} width={editProfile && '60%'} isOpen={showModal} handleClose={() => setShowModal(false)}>
         {idolsFound && (
           <Container>
@@ -324,7 +325,8 @@ const Profile = () => {
       </ModalThemed>
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          {userInfo.data.username ? userInfo.data.username : "user"}
+          {userInfo.data.email ? userInfo.data.email : "user"}
+         
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="flex-end">
           <div>

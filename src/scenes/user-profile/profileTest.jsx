@@ -310,8 +310,11 @@ const ProfileTest = () => {
         )}
       </ModalThemed>
       <Grid container spacing={2}>
+      
+    
         <Grid item xs={8}>
-          {userInfo.data.username ? userInfo.data.username : "user"}
+      
+          {userInfo.data.email ? userInfo.data.email : "user"}
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="flex-end">
           <div>

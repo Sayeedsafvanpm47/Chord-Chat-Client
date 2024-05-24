@@ -298,7 +298,7 @@ const navigate = useNavigate()
                 >
                   {   <FontAwesomeIcon style={{height:'20px', width:'20px'}} icon={faShop}/>} 
                 </ListItemIcon>
-                <ListItemText primary={'Melody Trade'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
+                <ListItemText primary={'Market Management'} sx={{ opacity: open ? 1 : 0,fontSize:'20px' }} />
               </ListItemButton>
               
 

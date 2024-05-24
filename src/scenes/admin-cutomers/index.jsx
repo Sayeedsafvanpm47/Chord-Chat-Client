@@ -130,7 +130,7 @@ const UsersInfo = () => {
 
   return (
     <>
-     
+     <Typography variant='h4'>User Management</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box

@@ -145,6 +145,7 @@ const UserProfile = () => {
     
     
      <>
+      <Typography variant='h4'>{userDetails.userDetails.username}</Typography>
       <ModalThemed height={editProfile && '80%'} width={editProfile && '60%'} isOpen={showModal} handleClose={() => setShowModal(false)}>
         {idolsFound && (
           <Container>
@@ -190,8 +191,13 @@ const UserProfile = () => {
     <Grid container spacing={2}>
   <Grid item xs={8}>
     {console.log(userDetails,'userDetails')}
-    {userDetails.userDetails?.username ? userDetails.userDetails?.username : 'user'} 
+    
+    {userDetails.userDetails?.email ? userDetails.userDetails?.email : 'user'} 
+    <br></br>
+    {userDetails.userDetails.jobProfile ? `Available for hiring, plays ${userDetails.userDetails.instrument}` : ""}
+
   </Grid>
+ 
  
 </Grid>
 <Box sx={{display:'flex',justifyContent:'center',alignItems:'center', margin:'5% 0 2% 0'}}>
@@ -199,7 +205,7 @@ const UserProfile = () => {
 </Box>
 <Box sx={{display:'flex',justifyContent:'center',alignItems:'center', margin:'0 0 5% 0'}}>
 <FlexBetween sx={{gap:'2rem'}}>
-  <Typography sx={{fontSize:'20px'}} paragraph>{gigsCount} Gigs</Typography> 
+  <Typography sx={{fontSize:'20px'}} paragraph>{userDetails.userDetails.gigs.length} Gigs</Typography> 
   <span onClick={showFansData}><Typography sx={{fontSize:'20px'}} paragraph>{userDetails.userDetails.fans ? userDetails.userDetails.fans.length : 0 } Fans</Typography></span> 
   <span onClick={showIdols}><Typography sx={{fontSize:'20px'}} paragraph>{userDetails.userDetails.idols ? userDetails.userDetails.idols.length : 0 } Idols</Typography></span> 
 
@@ -223,7 +229,7 @@ const UserProfile = () => {
  
   <Box sx={{display:'flex',fontSize:'60px'}}>
   <FontAwesomeIcon icon={faGuitar}/>
-  <Typography sx={{fontSize:'20px',margin:'2% 0 0 0'}}>Gigs {gigsCount } </Typography>
+  <Typography sx={{fontSize:'20px',margin:'2% 0 0 0'}}>Gigs {userDetails.userDetails.gigs.length } </Typography>
  
 
   </Box>

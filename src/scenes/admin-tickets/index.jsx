@@ -262,6 +262,7 @@ const AdminTickets = () => {
 
   return (
     <>
+    <Typography variant='h4'>Ticket Counter</Typography>
       <ModalThemed
         height={"80%"}
         width={"60%"}
@@ -381,7 +382,7 @@ const AdminTickets = () => {
           >
             <SearchBar
               onSearch={handleSearch}
-              text={"Search for the best deals..."}
+              text={"Search for the tickets..."}
               width={"50%"}
             />
             <span onClick={createTicket}>
@@ -468,7 +469,7 @@ const AdminTickets = () => {
                         >
                         
                          
-                            <Tooltip title="Delete Ticket?">
+                            {/* <Tooltip title="Delete Ticket?">
                               <span onClick={()=>deleteTicket(item._id)} style={{ cursor: "pointer" }}>
                                 {" "}
                                 <FontAwesomeIcon
@@ -476,7 +477,7 @@ const AdminTickets = () => {
                                 ></FontAwesomeIcon>
                               </span>
                             </Tooltip>
-                         
+                          */}
                        
                             <Tooltip title="Edit Ad?">
                               <span onClick={()=>editTicket(item._id)} style={{ cursor: "pointer" }}>

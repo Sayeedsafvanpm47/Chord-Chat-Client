@@ -344,6 +344,7 @@ const MarketPlace = () => {
 
   return (
     <>
+    <Typography variant='h4'>Melody Trade</Typography>
       <ModalThemed
         height={"80%"}
         width={"60%"}

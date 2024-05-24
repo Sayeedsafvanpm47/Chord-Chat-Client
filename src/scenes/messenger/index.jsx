@@ -19,6 +19,8 @@ import { io } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCancel, faPhone, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import Hand from "../../components/Hand";
+import TextAnimate from '../../components/TextAnimate'
 
 
 const Messenger = () => {
@@ -33,6 +35,7 @@ const Messenger = () => {
           const [showModal,setShowModal] = useState(false)
           const [roomNumber,setRoomNumber] = useState('')
           const [callDetails,setCallDetails] = useState(null)
+          const [onlineUsers,setOnlineUsers] = useState([])
           const [activeConversationId, setActiveConversationId] = useState(null);
         
           const socket = useSocket()
@@ -90,6 +93,7 @@ const Messenger = () => {
             
             socket.current.on('getUsers',users=>{
               console.log(users,'users from socket')
+              setOnlineUsers(users)
              })}
           },[userInfo.data,socket])
           
@@ -132,19 +136,7 @@ const Messenger = () => {
           },[currentChat])
 
 
-          const handleVideoCall = ()=>
-          {
-            const roomId = uuidv4().slice(0,5)
-            const receiverId = currentChat.members.find(member => member !== userInfo.data._id)
-            socket.current.emit('videoCallInitiated',{  userId: userInfo.data._id,
-              profilePic: userInfo.data.image,
-              username: userInfo.data.username,
-              roomId: roomId,
-              receiverId:receiverId})
-              navigate(`/room/:${roomId}`)
-          }
-          
-       
+         
           
           const handleChange = (event) => {
             setTextareaValue(event.target.value);
@@ -198,6 +190,7 @@ const Messenger = () => {
   
   return (
     <>
+     <Typography variant='h4'>Chats</Typography>
    <ModalThemed height={'50%'} isOpen={showModal} handleClose={() => setShowModal(false)}>
       <Container>
       <Box sx={{marginTop:'20px',display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -216,24 +209,24 @@ const Messenger = () => {
     </ModalThemed>
     <div className="messenger">
     
-      <div className="chatMenu" style={{flex:isMobile?'1':''}}>
+      <div className="chatMenu" style={{flex:isMobile?'5':''}}>
         <div className="chatMenuWrapper">
           <div className="boxTitle">
-          <SearchBar text={'Search for friends'} width={'100%'}/>
+          <Typography variant="h5">Buddies</Typography>
           </div>
-          {conversation.map(item => <div key={item._id} className={activeConversationId==item._id?'active':''} onClick={()=>{setCurrentChat(item), setActiveConversationId(item._id);}}><Conversations conversation={item}/></div>)}
+          {conversation.map(item => <div key={item._id} className={activeConversationId==item._id?'active':''} onClick={()=>{setCurrentChat(item), setActiveConversationId(item._id);}}><Conversations onlineUsers={onlineUsers} conversation={item}/></div>)}
        
        
         </div>
       
       </div>
-      <div className="chatBox" style={{flex:isMobile?'11':''}}>
+      <div className="chatBox" style={{flex:isMobile?'7':''}}>
   
         
     
         <div className="chatBoxWrapper">
         <div className="boxTitle">
-        <Typography variant="h5">Messages <FontAwesomeIcon onClick={handleVideoCall} icon={faVideo}></FontAwesomeIcon></Typography>
+        <Typography variant="h5">Messages </Typography>
         
       
        
@@ -241,7 +234,14 @@ const Messenger = () => {
           </div>
          
          { currentChat ? (<><div className="chatBoxtop">
-                {messages.length ? messages.map(item=>    <div ref={scrollRef}><Message messages={item} ownmessage={item.senderId === userInfo.data._id } /> </div>) : <Typography>No messages</Typography>  }
+                {messages.length ? messages.map(item=>    <div ref={scrollRef}><Message messages={item} ownmessage={item.senderId === userInfo.data._id } /> </div>) : <div style={{display:'flex',justifyContent:'center',alignItems:'center',paddingTop:'20%'}}>
+           
+    {isMobile ? '' :<> <div>
+           <Hand/>
+           
+           </div>
+          <Typography variant="h4">Say something, make a connection...</Typography></>}
+           </div>  }
           </div>
          
           <div className="chatBoxBottom">
@@ -265,7 +265,14 @@ const Messenger = () => {
 
        
         
-          </div></>) : 'Text some one bruh'}
+          </div></>) : <div style={{display:'flex',justifyContent:'center',alignItems:'center',paddingTop:'20%'}}>
+           
+            <div>
+            <Hand/>
+            
+            </div>
+            <Typography variant="h3">Text someone...</Typography>
+            </div>}
         
         </div>
       </div>

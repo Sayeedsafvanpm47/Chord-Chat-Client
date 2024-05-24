@@ -55,6 +55,7 @@ import TextAnimate2 from "../../components/TextAnimate2";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { MarketApi, UserApi } from "../../api";
 import PaginationComponent from "../../components/Pagination";
+import ReactPlayer from "react-player";
 
 const AdminPosts = () => {
   const navigate = useNavigate()
@@ -65,14 +66,18 @@ const AdminPosts = () => {
   const theme = useTheme(); // Access the Material-UI theme
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-
+  const playerRef = useRef();
+  const [play, setPlay] = useState(true);
+  const togglePlay = async () => {
+    setPlay(!play);
+  };
 
   const fetchUsers = async (page) => {
     try {
           console.log(page,'page')
-      const response = await axios.get(`http://localhost:3002/api/user-service/get-all-users/${page}`,{withCredentials:true});
+      const response = await axios.get(`http://localhost:3004/api/post-service/get-all-posts/${page}`,{withCredentials:true});
       console.log(response.data);
-      setUsers(response.data.data);
+      setUsers(response.data.posts);
       setTotalCount(response.data.totalCount);
       console.log(users)
     } catch (error) {
@@ -89,13 +94,9 @@ const AdminPosts = () => {
         setSearchResults([]);
         return;
       }
-      const response = await axios.post(
-        "http://localhost:3002/api/user-service/find-users",
-        { searchTerm: value },
-        { withCredentials: true }
-      );
+      const response =await axios.post(`http://localhost:3004/api/post-service/search-posts`,{searchTerm:value},{withCredentials:true});
 
-      setSearchResults(response.data.users);
+      setSearchResults(response.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -106,10 +107,10 @@ const AdminPosts = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   
-  const toggleBlock = async (id) => {
+  const toggleVisibility = async (id) => {
     try {
-      const response = await UserApi.patch(`block-user/${id}`)
-      console.log(response,'ad flag response')
+      const response = await axios.patch(`http://localhost:3004/api/post-service/toggle-post-visibility/${id}`,{},{withCredentials:true});
+     
       showToastSuccess(response.data.message)
       await fetchUsers(1)
 
@@ -130,7 +131,7 @@ const AdminPosts = () => {
 
   return (
     <>
-     
+     <Typography variant='h4'>Gig Management</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box
@@ -144,7 +145,7 @@ const AdminPosts = () => {
           >
             <SearchBar
               onSearch={handleSearch}
-              text={"Search for the best deals..."}
+              text={"Search for the specific posts..."}
               width={"50%"}
             />
         
@@ -153,7 +154,7 @@ const AdminPosts = () => {
       </Grid>
       <Divider />
 
-      {searchResults.length == 0 &&
+      {searchResults?.length == 0 &&
         (users?.length > 0 ? (
           <div>
             {" "}
@@ -169,10 +170,12 @@ const AdminPosts = () => {
                       boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
                       borderRadius: "10px",
                       marginBottom: "20px",
+                      height:'80vh',
                       transition: "transform 0.2s ease",
                       "&:hover": {
                         transform: "translateY(-10px) scale(0.9)",
                         backgroundColor: "#3a3b3c",
+                       
                       },
                     }}
                   >
@@ -187,32 +190,34 @@ const AdminPosts = () => {
                       <div
                         style={{
                           width: "200px",
-                          height: "200px",
+                          height: "70vh",
                           overflow: "hidden",
                           borderRadius: "8px",
+                         
                         }}
                       >
-                        <img
-                          src={item.image}
-                          alt={item.description}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
+                        <div onClick={togglePlay} style={{ marginTop:'80px',borderRadius:'30px'}}>
+                        <ReactPlayer
+      volume={1}
+      ref={playerRef}
+      url={item.video}
+      height='100%'
+      width='100%'
+      playing={play}
+      loop={true}
+    />
+                        </div>
+                     
                       </div>
                       <Box>
-                        <Typography variant="h3">Username - {item.username}</Typography>
-                        <Typography variant="h5">Firstname - {item.firstname}</Typography>
-                        <Typography variant="h5">Lastname - {item.lastname}</Typography>
-                        <Typography variant="h5">Email - {item.email}</Typography>
-                        <Typography variant="h5">Talent - {item.talent}</Typography>
-                        <Typography variant="h5">Gigs - {item.gigs.length}</Typography>
-                        <Typography variant="h5">Fans - {item.fans.length}</Typography>
-                        <Typography variant="h5">Idols - {item.idols.length}</Typography>
-                        <Typography variant="h5">Blocklist - {item.block_list.length}</Typography>
-                        <Typography variant="h5">Notifications - {item.notifications.length}</Typography>
+                        <Typography variant="h3">Title - {item.title}</Typography>
+                        <Typography variant="h5">Description - {item.description}</Typography>
+                        <Typography variant="h5">Likes - {item.likes.length}</Typography>
+                        <Typography variant="h5">Comments - {item.comments.length}</Typography>
+                        <Typography variant="h5">Flag count - {item.flagcount}</Typography>
+                        <Typography variant="h5">Visibility - {item.visibility?'visible':'hidden'}</Typography>
+                        <Typography variant="h5">Owner - {item.username}</Typography>
+                  
 
                         <Box
                           sx={{
@@ -224,14 +229,14 @@ const AdminPosts = () => {
                        
                        <Tooltip title="Toggle block user?">
                                 <span
-                                  onClick={() => toggleBlock(item._id)}
+                                  onClick={() => toggleVisibility(item._id)}
                                   style={{ cursor: "pointer" }}
                                 >
                                   {" "}
-                                {item.active ? (<FontAwesomeIcon
-                                    icon={faCheck}
+                                {item.visibility ? (<FontAwesomeIcon
+                                    icon={faEye}
                                   ></FontAwesomeIcon>) : (<FontAwesomeIcon
-                                    icon={faBan}
+                                    icon={faEyeSlash}
                                   ></FontAwesomeIcon>)}
                                 </span>
                               </Tooltip>
@@ -264,10 +269,12 @@ const AdminPosts = () => {
                       boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
                       borderRadius: "10px",
                       marginBottom: "20px",
+                      height:'80vh',
                       transition: "transform 0.2s ease",
                       "&:hover": {
                         transform: "translateY(-10px) scale(0.9)",
                         backgroundColor: "#3a3b3c",
+                       
                       },
                     }}
                   >
@@ -282,33 +289,35 @@ const AdminPosts = () => {
                       <div
                         style={{
                           width: "200px",
-                          height: "200px",
+                          height: "70vh",
                           overflow: "hidden",
                           borderRadius: "8px",
+                         
                         }}
                       >
-                        <img
-                          src={item.image}
-                          alt={item.description}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
+                        <div onClick={togglePlay} style={{ marginTop:'80px',borderRadius:'30px'}}>
+                        <ReactPlayer
+      volume={1}
+      ref={playerRef}
+      url={item.video}
+      height='100%'
+      width='100%'
+      playing={play}
+      loop={true}
+    />
+                        </div>
+                     
                       </div>
                       <Box>
-                        <Typography variant="h2">{item.description}</Typography>
-                        <Typography variant="h5">{item.username}</Typography>
-                        <Typography variant="body1">Location</Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{ color: "text.secondary" }}
-                        >
-                          Price: &#8377;{item.price}.00
-                        </Typography>
-                        <Typography variant="body1">Inc Tax.</Typography>
-                        <Typography variant="body1">Ad posted on:</Typography>
+                        <Typography variant="h3">Title - {item.title}</Typography>
+                        <Typography variant="h5">Description - {item.description}</Typography>
+                        <Typography variant="h5">Likes - {item.likes.length}</Typography>
+                        <Typography variant="h5">Comments - {item.comments.length}</Typography>
+                        <Typography variant="h5">Flag count - {item.flagcount}</Typography>
+                        <Typography variant="h5">Visibility - {item.visibility?'visible':'hidden'}</Typography>
+                        <Typography variant="h5">Owner - {item.username}</Typography>
+                  
+
                         <Box
                           sx={{
                             display: "flex",
@@ -319,14 +328,14 @@ const AdminPosts = () => {
                        
                        <Tooltip title="Toggle block user?">
                                 <span
-                                  onClick={() => toggleBlock(item._id)}
+                                  onClick={() => toggleVisibility(item._id)}
                                   style={{ cursor: "pointer" }}
                                 >
                                   {" "}
-                                {item.active ? (<FontAwesomeIcon
-                                    icon={faCheck}
+                                {item.visibility ? (<FontAwesomeIcon
+                                    icon={faEye}
                                   ></FontAwesomeIcon>) : (<FontAwesomeIcon
-                                    icon={faBan}
+                                    icon={faEyeSlash}
                                   ></FontAwesomeIcon>)}
                                 </span>
                               </Tooltip>
@@ -343,7 +352,7 @@ const AdminPosts = () => {
 
       <Divider />
       <Box sx={{ display: "flex", fontSize: "60px" }}>{/* ... */}</Box>
-    { searchResults.length == 0 &&  <PaginationComponent onPageChange={handlePage} count={totalCount} />}
+    { searchResults?.length == 0 &&  <PaginationComponent onPageChange={handlePage} count={totalCount} />}
     </>
   );
 };

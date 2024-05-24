@@ -220,6 +220,8 @@ const UserGigs = ({numberOfGigs}) => {
                   <Typography variant="h3">{postItem.username}</Typography>
                   <Typography variant="h2">{postItem.title}</Typography>
                   <Typography variant="h6">{postItem.description}</Typography>
+                  <Typography variant="h6">Liked by {postItem.likes.length} musicians</Typography>
+                  <Typography variant="h6">{postItem.comments.length} feedbacks</Typography>
                   {/* Add more text content as needed */}
                 </Box>
               </Grid>

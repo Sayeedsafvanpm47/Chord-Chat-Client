@@ -10,15 +10,18 @@
 }
 
 .chatMenu{
-          flex: 3.5;
+          flex: 5;
           border-right: 0.2px solid rgba(255, 255, 255, 0.433);
+          overflow-y: scroll;
+          overflow-x: hidden;
+          scrollbar-width: none;
           
        
         
         
 }
 .chatBox{
-          flex: 5.5;
+          flex: 7;
           border-right: 0.2px solid rgba(255, 255, 255, 0.433);
           
 }

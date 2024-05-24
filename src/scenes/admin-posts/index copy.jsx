@@ -54,10 +54,9 @@ import { useForm } from "react-hook-form";
 import TextAnimate2 from "../../components/TextAnimate2";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { MarketApi, UserApi } from "../../api";
-import TextAnimate from '../../components/TextAnimate'
 import PaginationComponent from "../../components/Pagination";
 
-const AdminOrders = () => {
+const AdminPosts = () => {
   const navigate = useNavigate()
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState([]);
@@ -71,9 +70,9 @@ const AdminOrders = () => {
   const fetchUsers = async (page) => {
     try {
           console.log(page,'page')
-      const response = await axios.get(`http://localhost:3007/api/ticket-order-service/get-all-orders/${page}`,{withCredentials:true});
+      const response = await axios.get(`http://localhost:3002/api/user-service/get-all-users/${page}`,{withCredentials:true});
       console.log(response.data);
-      setUsers(response.data.orders);
+      setUsers(response.data.data);
       setTotalCount(response.data.totalCount);
       console.log(users)
     } catch (error) {
@@ -131,8 +130,7 @@ const AdminOrders = () => {
 
   return (
     <>
-    <Typography variant='h4'>Ticket Orders</Typography>
-
+     
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box
@@ -146,7 +144,7 @@ const AdminOrders = () => {
           >
             <SearchBar
               onSearch={handleSearch}
-              text={"Search for the orders..."}
+              text={"Search for the best deals..."}
               width={"50%"}
             />
         
@@ -205,11 +203,17 @@ const AdminOrders = () => {
                         />
                       </div>
                       <Box>
-                        <Typography variant="h3">Ticket - {item.title}</Typography>
-                        <Typography variant="h5">Description - {item.description}</Typography>
-                        <Typography variant="h5">Amount - {item.totalAmount}</Typography>
-                        <Typography variant="h5">Bought By - {item.username}</Typography>
-                        <Typography variant="h5">Status - {item.status == 'Cancelled' ? 'Cancelled' : 'Paid'}</Typography>
+                        <Typography variant="h3">Username - {item.username}</Typography>
+                        <Typography variant="h5">Firstname - {item.firstname}</Typography>
+                        <Typography variant="h5">Lastname - {item.lastname}</Typography>
+                        <Typography variant="h5">Email - {item.email}</Typography>
+                        <Typography variant="h5">Talent - {item.talent}</Typography>
+                        <Typography variant="h5">Gigs - {item.gigs.length}</Typography>
+                        <Typography variant="h5">Fans - {item.fans.length}</Typography>
+                        <Typography variant="h5">Idols - {item.idols.length}</Typography>
+                        <Typography variant="h5">Blocklist - {item.block_list.length}</Typography>
+                        <Typography variant="h5">Notifications - {item.notifications.length}</Typography>
+
                         <Box
                           sx={{
                             display: "flex",
@@ -218,7 +222,19 @@ const AdminOrders = () => {
                           }}
                         >
                        
-                      
+                       <Tooltip title="Toggle block user?">
+                                <span
+                                  onClick={() => toggleBlock(item._id)}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {" "}
+                                {item.active ? (<FontAwesomeIcon
+                                    icon={faCheck}
+                                  ></FontAwesomeIcon>) : (<FontAwesomeIcon
+                                    icon={faBan}
+                                  ></FontAwesomeIcon>)}
+                                </span>
+                              </Tooltip>
                       
                         </Box>
                       </Box>
@@ -239,7 +255,7 @@ const AdminOrders = () => {
             {" "}
             {searchResults.map((item) => (
               <div>
-                           <ListItem
+                    <ListItem
                     key={item._id}
                     alignItems="flex-start"
                     sx={{
@@ -282,12 +298,17 @@ const AdminOrders = () => {
                         />
                       </div>
                       <Box>
-                        <Typography variant="h3">Ticket - {item.title}</Typography>
-                        <Typography variant="h5">Description - {item.description}</Typography>
-                        <Typography variant="h5">Amount - {item.totalAmount}</Typography>
-                        <Typography variant="h5">Bought By - {item.username}</Typography>
-                        <Typography variant="h5">Status - {item.status == 'Cancelled' ? 'Cancelled' : 'Paid'}</Typography>
-                        
+                        <Typography variant="h2">{item.description}</Typography>
+                        <Typography variant="h5">{item.username}</Typography>
+                        <Typography variant="body1">Location</Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{ color: "text.secondary" }}
+                        >
+                          Price: &#8377;{item.price}.00
+                        </Typography>
+                        <Typography variant="body1">Inc Tax.</Typography>
+                        <Typography variant="body1">Ad posted on:</Typography>
                         <Box
                           sx={{
                             display: "flex",
@@ -296,7 +317,19 @@ const AdminOrders = () => {
                           }}
                         >
                        
-                      
+                       <Tooltip title="Toggle block user?">
+                                <span
+                                  onClick={() => toggleBlock(item._id)}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {" "}
+                                {item.active ? (<FontAwesomeIcon
+                                    icon={faCheck}
+                                  ></FontAwesomeIcon>) : (<FontAwesomeIcon
+                                    icon={faBan}
+                                  ></FontAwesomeIcon>)}
+                                </span>
+                              </Tooltip>
                       
                         </Box>
                       </Box>
@@ -315,4 +348,4 @@ const AdminOrders = () => {
   );
 };
 
-export default AdminOrders;
+export default AdminPosts;

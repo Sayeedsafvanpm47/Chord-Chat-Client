@@ -145,7 +145,7 @@ const AdminMarket = () => {
 
   return (
     <>
-     
+     <Typography variant='h4'>Market Management</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box
@@ -159,7 +159,7 @@ const AdminMarket = () => {
           >
             <SearchBar
               onSearch={handleSearch}
-              text={"Search for the best deals..."}
+              text={"Search for the ads..."}
               width={"50%"}
             />
         
